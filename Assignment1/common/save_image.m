@@ -1,9 +1,13 @@
-function save_image(img, outp_file_name)
+function save_image(img, outp_file_name, colmap)
 myNumOfColors = 200;
 myColorScale = [(0:1/(myNumOfColors-1):1)' , (0:1/(myNumOfColors-1):1)' , (0:1/(myNumOfColors-1):1)'];
 imagesc(img); 
-colormap (myColorScale); 
-colormap gray; 
+colormap (myColorScale);
+if colmap==1
+    colormap jet;
+else
+    colormap gray;
+end 
 daspect ([1 1 1]); 
 axis tight;
 colorbar;
