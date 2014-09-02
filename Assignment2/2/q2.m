@@ -23,7 +23,7 @@ end
 %imshow(double(imageOrig)/255);colorbar;pause
 imageNoisy = image;
 
-w = 3; %% w odd
+w = 9; %% w odd
 A = linspace(1,w,w);
 col = repmat(A,[w 1]);
 row = repmat(A',[1 w]);
