@@ -26,12 +26,16 @@ for i=(totalOffset + 1):(x + totalOffset)
 		filter = zeros(windowSize, windowSize);
 		for k=(i - windowOffset):(i + windowOffset)
 			for l=(j - windowOffset):(j + windowOffset)
-				patch_q = patch_p - arrayfun(@(x) exp(-x^2/(2*sigmaPatch^2)),imagePadded((k - patchOffset):(k + patchOffset), (l - patchOffset):(l + patchOffset)));
-				filter(k - (i - windowOffset - 1), l - (j - windowOffset - 1)) = -norm(patch_q)/(h*h);
+				patch_q = imagePadded((k - patchOffset):(k + patchOffset), (l - patchOffset):(l + patchOffset));
+				for m=1:patchSize
+					for n=1:patchSize
+						patch_q(m, n) = exp(-(patch_q(m, n)^2)/(2*sigmaPatch^2)) - patch_p(m, n);
+					end
+				end
+ 				filter(k - (i - windowOffset - 1), l - (j - windowOffset - 1)) = -norm(patch_q)/(h*h);
 			end
 		end
-		normalize = sum(filter(:));
-		
+		normalize = sum(filter(:));		
         filter = filter/normalize;
         weights = imagePadded((i - windowOffset):(i + windowOffset), (j - windowOffset):(j + windowOffset));
         weights = weights.*filter;
