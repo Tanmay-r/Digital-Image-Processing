@@ -3,8 +3,9 @@ function [image]=q2(image_name,param,sigmaSpatial,sigmaIntensity)
 
 load(image_name);
 rng(0);
-imageOrig =double(imageOrig)/255;
 image=imageOrig;
+imageOrig =(doimageOrig/255;
+image=double(image)/255;
 channels = size(image,3);
 
 x=size(image,1);
@@ -31,7 +32,7 @@ end
 imageNoisy = image;
 %imshow(double(imageNoisy));colorbar;pause
 
-w = 5; %% w odd
+w = 9; %% w odd
 A = linspace(1,w,w);
 col = repmat(A,[w 1]);
 row = repmat(A',[1 w]);
@@ -45,7 +46,6 @@ spatialWindow = sqrt(col+row);
 spatialWindow = arrayfun(@(x) exp(- x^2/(2*sigmaSpatial^2)), spatialWindow);
 image_final = zeros(x,y,channels);
 offset = (w-1)/2;
-imshow(double(spatialWindow));colorbar;pause
 for ch=1:channels,
     
     img_ch = image(:,:,ch);
