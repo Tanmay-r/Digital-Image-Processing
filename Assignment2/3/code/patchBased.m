@@ -22,14 +22,11 @@ for i=(totalOffset + 1):(x + totalOffset)
 	for j=(totalOffset + 1):(y + totalOffset)
 		i
 		j
-		patch_p = imagePadded((i - patchOffset):(i + patchOffset), (j - patchOffset):(j + patchOffset));
-		patch_p = arrayfun(@(x) exp(- x^2/(2*sigmaPatch^2)), patch_p);
+		patch_p = arrayfun(@(x) exp(- x^2/(2*sigmaPatch^2)), imagePadded((i - patchOffset):(i + patchOffset), (j - patchOffset):(j + patchOffset)));
 		filter = zeros(windowSize, windowSize);
 		for k=(i - windowOffset):(i + windowOffset)
 			for l=(j - windowOffset):(j + windowOffset)
-				patch_q = imagePadded((k - patchOffset):(k + patchOffset), (l - patchOffset):(l + patchOffset));
-				patch_q = arrayfun(@(x) exp(-x^2/(2*sigmaPatch^2)), patch_q);
-				patch_q = patch_p - patch_q;
+				patch_q = patch_p - arrayfun(@(x) exp(-x^2/(2*sigmaPatch^2)),imagePadded((k - patchOffset):(k + patchOffset), (l - patchOffset):(l + patchOffset)));
 				filter(k - (i - windowOffset - 1), l - (j - windowOffset - 1)) = -norm(patch_q)/(h*h);
 			end
 		end
