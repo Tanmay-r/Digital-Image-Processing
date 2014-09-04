@@ -2,7 +2,13 @@ function [imageOrig, filteredImage] = patchBased(filename, h, sigmaPatch)
 
 load(filename);
 imageOrig = double(imageOrig)/255;
-filteredImage = imageOrig;
+
+gaussian_filter = fspecial('gaussian', size(imageOrig), 0.66); 
+imageOrig = imfilter(imageOrig, h);
+imageOrig = downsample(imageOrig, 2);
+imageOrig = downsample(imageOrig, 2);
+imageOrig = imageOrig';
+%optimization on original image
 
 patchSize = 9;
 windowSize = 25;
@@ -18,30 +24,32 @@ totalOffset = windowOffset + patchOffset;
 imagePadded = zeros((patchSize-1) + (windowSize - 1) + x , (patchSize-1) + (windowSize - 1) + y);    
 imagePadded((totalOffset + 1):(x + totalOffset), (totalOffset + 1):(y + totalOffset)) = imageOrig;
 
+
 for i=(totalOffset + 1):(x + totalOffset)
 	for j=(totalOffset + 1):(y + totalOffset)
 		i
 		j
-		patch_p = arrayfun(@(x) exp(- x^2/(2*sigmaPatch^2)), imagePadded((i - patchOffset):(i + patchOffset), (j - patchOffset):(j + patchOffset)));
+		for m=(i - patchOffset):(i + patchOffset)
+			for n=(j - patchOffset):(j + patchOffset)
+				patch_p(((m + 1) -(i - patchOffset)) , ((n + 1) - (j - patchOffset))) = exp(-(imagePadded(m,n)^2)/(2*sigmaPatch^2));
+			end
+		end
 		filter = zeros(windowSize, windowSize);
 		for k=(i - windowOffset):(i + windowOffset)
 			for l=(j - windowOffset):(j + windowOffset)
-				patch_q = imagePadded((k - patchOffset):(k + patchOffset), (l - patchOffset):(l + patchOffset));
-				for m=1:patchSize
-					for n=1:patchSize
-						patch_q(m, n) = exp(-(patch_q(m, n)^2)/(2*sigmaPatch^2)) - patch_p(m, n);
+				for m=(k - patchOffset):(k + patchOffset)
+					for n=(l - patchOffset):(l + patchOffset)
+						patch_norm = (exp(-(imagePadded(m, n)^2)/(2*sigmaPatch^2)) - patch_p((m + 1) -(k - patchOffset), ((n + 1) - (l - patchOffset))))^2;
 					end
 				end
- 				filter(k - (i - windowOffset - 1), l - (j - windowOffset - 1)) = -norm(patch_q)/(h*h);
+ 				filter(k - (i - windowOffset - 1), l - (j - windowOffset - 1)) = -sqrt(patch_norm)/(h*h);
 			end
 		end
 		normalize = sum(filter(:));		
         filter = filter/normalize;
         weights = imagePadded((i - windowOffset):(i + windowOffset), (j - windowOffset):(j + windowOffset));
         weights = weights.*filter;
-        imagePadded(i, j) = sum(weights(:))/(windowSize^2);
+        filteredImage((i - totalOffset), (j - totalOffset)) = sum(weights(:))/(windowSize^2);
 	end
 end
-
-filteredImage = imagePadded((totalOffset + 1):(x + totalOffset), (totalOffset + 1):(y + totalOffset));
 
