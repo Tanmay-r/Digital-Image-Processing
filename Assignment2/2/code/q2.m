@@ -1,4 +1,3 @@
-
 function [image]=q2(image_name,param,sigmaSpatial,sigmaIntensity)
 
 load(image_name);
@@ -17,19 +16,10 @@ if(param==1)
     
     image = imnoise(image,'gaussian',0,range*range);
 
-%{
-    range=max(image(:))-min(image(:));
-    range=0.05*range;
-    
-    for ch=1:channels 
-        image(:,:,ch)=image(:,:,ch)+normrnd(0,range,[x y 1]);
-    end
-%}
-
 end
 
 imageNoisy = image;
-%imshow(double(imageNoisy));colorbar;pause
+%imshow(double(imageOrig));colorbar;pause
 
 w = 5; %% w odd
 A = linspace(1,w,w);
@@ -45,7 +35,7 @@ spatialWindow = sqrt(col+row);
 spatialWindow = arrayfun(@(x) exp(- x^2/(2*sigmaSpatial^2)), spatialWindow);
 image_final = zeros(x,y,channels);
 offset = (w-1)/2;
-imshow(double(spatialWindow));colorbar;pause
+%imshow(double(spatialWindow));colorbar;pause
 for ch=1:channels,
     
     img_ch = image(:,:,ch);
@@ -85,19 +75,19 @@ imshow(image_final);colorbar
 errorNoise = imageOrig-imageNoisy;
 errorNoise = errorNoise.^2;
 errorNoise = sqrt(sum(errorNoise(:)))/(x*y);
-'noise error ';
+'RMSD between Original and Noisy '
 errorNoise
 
 errorFilter = imageOrig -image_final;
 errorFilter = errorFilter.^2;
 errorFilter = sqrt(sum(errorFilter(:)))/(x*y);
-'filter error';
+'RMSD between Original and Final '
 errorFilter
 
 errorBwNoise = image_final-imageNoisy;
 errorBwNoise = errorBwNoise.^2;
 errorBwNoise = sqrt(sum(errorBwNoise(:)))/(x*y);
-'diff with noise';
+'RMSD between Noisy and Final '
 errorBwNoise
 end
 
