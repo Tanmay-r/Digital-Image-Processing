@@ -1,21 +1,31 @@
-function recog_rate=q2a(k,param)
+function [recog_rate]=q2a(k,param,reconstruct)
     
 
     if(param==1)
         sizeOfImage=92*112;
         noOfFaces=35;
-        countEachFace=5;
-        countEachTestFace=5;
+        countEachFace=7;
+        countEachTestFace=3;
+        height = 92;
+        width = 112;
     else
         sizeOfImage=192*168;
         noOfFaces=39;
         countEachFace=2;
         countEachTestFace=3;
+        height = 192;
+        width = 168;
     end
     
     
-    noOfImages=noOfFaces*countEachFace;
-    noOfTestImages=noOfImages;
+    if(param==2)
+        noOfImages=(noOfFaces-1)*countEachFace;
+        noOfTestImages=(noOfFaces-1)*countEachTestFace;
+    else
+        noOfImages=noOfFaces*countEachFace;
+        noOfTestImages=noOfFaces*countEachTestFace;
+    end
+    
     
     X=zeros(sizeOfImage,noOfImages);
     testImages=zeros(sizeOfImage,noOfTestImages);
@@ -25,7 +35,9 @@ function recog_rate=q2a(k,param)
     
     for i=1:noOfFaces
         
-        if(param==2 && i==14
+        if(param==2 && i==14)
+            continue;
+        end
         if(param==1)
             dir='../../att_faces/s';
         else
@@ -44,14 +56,13 @@ function recog_rate=q2a(k,param)
         
         for j=1:countEachTestFace
             pic=strcat(dir,int2str(j+countEachFace),'.pgm');
+            %pic=strcat(dir,int2str(j),'.pgm');
             img=imread(pic);
             img=img/255;
             testImages(:,testCount)=img(:);
             testCount=testCount+1;
         end 
     end
-    
-   
     
     meanX=mean(X,2);
     
@@ -67,27 +78,48 @@ function recog_rate=q2a(k,param)
     L=X'*X;
     
     
-    [v,~]=eigs(L,k);
+    [v,d]=eigs(L,k);
    
     eig_vec=X*v;
     eig_vec=normc(eig_vec);
+    %max(meanX)
+    %max(eig_vec(:,1))
+    if(reconstruct)
+        k =1;
+        noOfEigenFaces= 25
+        %reconstructing X(:,k)
+        for i =1:noOfEigenFaces
+            
+        end
+        
+        
+    end
+    imshow(reshape(meanX,width,height));
+    
+    imshow(reshape(meanX + eig_vec(:,1),width,height));
     
     coeff=eig_vec'*X;
     testCoeff=eig_vec'*testImages; 
-    
+    size(testCoeff)
     
     noOfHits=0;
+   
+    %testCoeff = coeff;
+    %size(coeff);
     for i=1:noOfTestImages
         
        temp=coeff;
-       for j=1:k
+       for j=1:noOfImages
           temp(:,j)=temp(:,j)-testCoeff(:,i);
        end
+       %sum(temp(:,i))
+       %pause;
        temp=temp.^2;
        temp=sum(temp,1);
        [~,ind]=min(temp);
        
-       if(uint16(ind-1)/5==uint16(i-1)/5)
+       
+       if(uint16(ind-1)/countEachFace==uint16(i-1)/countEachTestFace)
            noOfHits=noOfHits+1;
        end
     end
