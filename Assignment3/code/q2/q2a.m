@@ -1,14 +1,27 @@
-function recog_rate=q2a(k)
+function recog_rate=q2a(k,param)
     
 
-    sizeOfImage=92*112;
-    noOfFaces=35;
-    countEachFace=5;
-    countEachTestFace=5;
+    if(param==1)
+        sizeOfImage=92*112;
+        noOfFaces=35;
+        countEachFace=5;
+        countEachTestFace=5;
+    else
+        sizeOfImage=192*168;
+        noOfFaces=39;
+        countEachFace=2;
+        countEachTestFace=3;
+    end
     
     
-    noOfImages=noOfFaces*countEachFace;
-    noOfTestImages=noOfImages;
+    if(param==2)
+        noOfImages=(noOfFaces-1)*countEachFace;
+        noOfTestImages=(noOfFaces-1)*countEachTestFace;
+    else
+        noOfImages=noOfFaces*countEachFace;
+        noOfTestImages=noOfFaces*countEachTestFace;
+    end
+    
     
     X=zeros(sizeOfImage,noOfImages);
     testImages=zeros(sizeOfImage,noOfTestImages);
@@ -17,8 +30,18 @@ function recog_rate=q2a(k)
     testCount=1;
     
     for i=1:noOfFaces
-        dir='../../att_faces/s';
+        
+        if(param==2 && i==14)
+            continue;
+        end
+        if(param==1)
+            dir='../../att_faces/s';
+        else
+            dir='../../CroppedYale_Subset/CroppedYale_Subset/';
+        end
+        
         dir=strcat(dir,int2str(i),'/');
+        
         for j=1:countEachFace
             pic=strcat(dir,int2str(j),'.pgm');
             img=imread(pic);
@@ -35,8 +58,6 @@ function recog_rate=q2a(k)
             testCount=testCount+1;
         end 
     end
-    
-   
     
     meanX=mean(X,2);
     
@@ -72,7 +93,7 @@ function recog_rate=q2a(k)
        temp=sum(temp,1);
        [~,ind]=min(temp);
        
-       if(uint16(ind)/5==uint16(i)/5)
+       if(uint16(ind-1)/countEachTestFace==uint16(i-1)/countEachTestFace)
            noOfHits=noOfHits+1;
        end
     end
