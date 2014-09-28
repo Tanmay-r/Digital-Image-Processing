@@ -83,6 +83,8 @@ function recog_rate=q2a(k,param)
     
     
     noOfHits=0;
+   
+    
     for i=1:noOfTestImages
         
        temp=coeff;
@@ -93,7 +95,8 @@ function recog_rate=q2a(k,param)
        temp=sum(temp,1);
        [~,ind]=min(temp);
        
-       if(uint16(ind-1)/countEachTestFace==uint16(i-1)/countEachTestFace)
+       
+       if(uint16(ind-1)/countEachFace==uint16(i-1)/countEachTestFace)
            noOfHits=noOfHits+1;
        end
     end
