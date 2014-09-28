@@ -6,3 +6,6 @@ sharpened_img = imageOrig + scale*(1 - blurred_img);
 max_intensity = max(sharpened_img(:));
 min_intensity = min(sharpened_img(:));
 sharpened_img = (sharpened_img - min_intensity)/(max_intensity - min_intensity);
+max_intensity_orig = max(imageOrig(:));
+min_intensity_orig = min(imageOrig(:));
+imageOrig = (imageOrig - min_intensity_orig)/(max_intensity_orig - min_intensity_orig);

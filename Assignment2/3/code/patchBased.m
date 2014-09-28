@@ -5,7 +5,7 @@ imageOrig = double(imageOrig)/255;
 
 %optimization on original image
 gaussian_filter = fspecial('gaussian', size(imageOrig), 0.66); 
-imageOrig = imfilter(imageOrig, h);
+imageOrig = imfilter(imageOrig, gaussian_filter);
 imageOrig = downsample(imageOrig, 2);
 imageOrig = downsample(imageOrig', 2);
 imageOrig = imageOrig';
@@ -31,10 +31,11 @@ imagePadded((totalOffset + 1):(x + totalOffset), (totalOffset + 1):(y + totalOff
 
 gaussian_mask = fspecial('gaussian', patchSize, sigmaPatch);
 
+filteredImage=corruptImage;
 for i=(totalOffset + 1):(x + totalOffset)
 	for j=(totalOffset + 1):(y + totalOffset)
-		i
-		j
+		
+        patch_p = zeros(patchSize, patchSize);
 		for m=(i - patchOffset):(i + patchOffset)
 			for n=(j - patchOffset):(j + patchOffset)
 				patch_p(((m + 1) -(i - patchOffset)) , ((n + 1) - (j - patchOffset))) = imagePadded(m,n) * gaussian_mask(((m + 1) -(i - patchOffset)) , ((n + 1) - (j - patchOffset)));
@@ -59,4 +60,25 @@ for i=(totalOffset + 1):(x + totalOffset)
         filteredImage((i - totalOffset), (j - totalOffset)) = sum(weights(:))/(windowSize^2);
 	end
 end
+
+'Done!!!';
+imshow(filteredImage,[]);colorbar
+
+errorNoise = imageOrig-corruptImage;
+errorNoise = errorNoise.^2;
+errorNoise = sqrt(sum(errorNoise(:)))/(x*y);
+'RMSD between Original and Noisy '
+errorNoise
+
+errorFilter = imageOrig -filteredImage;
+errorFilter = errorFilter.^2;
+errorFilter = sqrt(sum(errorFilter(:)))/(x*y);
+'RMSD between Original and Final '
+errorFilter
+
+errorBwNoise = filteredImage-corruptImage;
+errorBwNoise = errorBwNoise.^2;
+errorBwNoise = sqrt(sum(errorBwNoise(:)))/(x*y);
+'RMSD between Noisy and Final '
+errorBwNoise
 

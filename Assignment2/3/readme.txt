@@ -3,7 +3,7 @@ How to run
 1) Change directory to code
 2) Run myDriver()
 
-Time taken: approx 60 seconds
+Time taken: approx 250 seconds
 
 Team Members:
 Tanmay Randhavane 110050010
