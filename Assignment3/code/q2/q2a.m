@@ -117,15 +117,15 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
             subplot(5,5,i);
             %prevSum = prevSum+eig_vec(:,i)*sqrt(d(i));
             
-            prevSum = meanX+eig_vec(:,i)*sqrt(d(i))/10;
+            prevSum = meanX+eig_vec(:,i)*sqrt(d(i));
             Fourier(i) = log(1+ norm(fft(prevSum)));
             h = imshow(reshape(prevSum,width,height));
             title(num2str(i));
             %set(h, 'ButtonDownFcn',{@callback,i})
         end
    
-        %figure()
-        %plot(Fourier);
+        figure()
+        plot(Fourier);
     end
    
     for i=1:noOfTestImages
