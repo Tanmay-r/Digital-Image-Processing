@@ -11,6 +11,8 @@ end
 recog_rate=k;
 
 for i=1:size(k,2)
-    recog_rate(1,i)=q2a(k(1,i),param);
+    recog_rate(1,i)=q2a(k(1,i),param,1,0);
 end
+
+recog_rate
     

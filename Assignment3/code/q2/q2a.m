@@ -65,10 +65,8 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
         end 
     end
     
-    size(X(:,1))
     meanX=mean(X,2);
-    'mkfmkds'
-    size(meanX)
+   
     
     for i=1:noOfImages
         X(:,i)=X(:,i)-meanX;
@@ -87,13 +85,12 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
     %pause;
     eig_vec=X*v;
     eig_vec=normc(eig_vec);
-    'fkdjslkfjd *****'
    
-    d =diag(d);
+    d=diag(d);
      %size(d)
     %figure();
     %plot(d);
-    eig_vec = eig_vec(:,end-k:end);
+    eig_vec = eig_vec(:,end-k+1:end);
     %max(meanX)
     %max(eig_vec(:,1))
   
@@ -102,19 +99,14 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
     %imshow(reshape(meanX + eig_vec(:,1),width,height));
     
     coeff=eig_vec'*X;
-    testCoeff=eig_vec'*testImages; 
-    size(testCoeff)
-    size(eig_vec)
+    testCoeff=eig_vec'*testImages;
     noOfHits=0;
    
-    %testCoeff = coeff;
-    %size(coeff);
-      prevSum=meanX;
+    
       
     if(reconstruct==1)
         k =1;
-        noOfEigenFaces= 25
-        'fdjs'
+        noOfEigenFaces= 25;
         Fourier = zeros(noOfEigenFaces,1);
         %reconstructing X(:,k)
         set(gca, 'LooseInset', get(gca,'TightInset'))
@@ -123,8 +115,6 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
             %axis tight
             %axis off  
             subplot(5,5,i);
-            size(coeff(:,i))
-            size(eig_vec(:,i))
             %prevSum = prevSum+eig_vec(:,i)*sqrt(d(i));
             
             prevSum = meanX+eig_vec(:,i)*sqrt(d(i))/10;
@@ -155,7 +145,6 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
            noOfHits=noOfHits+1;
        end
     end
-     'here'
     recog_rate=noOfHits/noOfTestImages;
    
     
@@ -189,10 +178,7 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
                 dotProducts(j) = abs(sum(temp(:,j).*testCoeff(:,i)))/(norm(temp(:,j))*norm(testCoeff(:,i)));
                  
             end
-            'yo yo '
-            size(dotProducts)
-            [val,ind]=max(dotProducts);
-            val;
+            [~,ind]=max(dotProducts);
             dotProducts(ind)
             %pause
             threshold = 0.9;
@@ -212,14 +198,14 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
                 end
             end
         end
-       'Total Recognition: ' 
-       noOfTestImages
-       'No Of Recognised Faces' 
-       noOfRecognised
-       'Not Recognised'
-       notRecognised
-       'Not Recognised New'
-       notRecognisedNew
+%        'Total Recognition: ' 
+%        noOfTestImages
+%        'No Of Recognised Faces' 
+%        noOfRecognised
+%        'Not Recognised'
+%        notRecognised
+%        'Not Recognised New'
+%        notRecognisedNew
        
    end
  
