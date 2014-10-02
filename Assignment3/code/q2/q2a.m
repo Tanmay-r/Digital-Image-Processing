@@ -4,8 +4,8 @@ function [recog_rate]=q2a(k,param,reconstruct)
     if(param==1)
         sizeOfImage=92*112;
         noOfFaces=35;
-        countEachFace=7;
-        countEachTestFace=3;
+        countEachFace=5;
+        countEachTestFace=5;
         height = 92;
         width = 112;
     else
@@ -38,6 +38,7 @@ function [recog_rate]=q2a(k,param,reconstruct)
         if(param==2 && i==14)
             continue;
         end
+        
         if(param==1)
             dir='../../att_faces/s';
         else
@@ -64,7 +65,10 @@ function [recog_rate]=q2a(k,param,reconstruct)
         end 
     end
     
+    size(X(:,1))
     meanX=mean(X,2);
+    'mkfmkds'
+    size(meanX)
     
     for i=1:noOfImages
         X(:,i)=X(:,i)-meanX;
@@ -78,11 +82,18 @@ function [recog_rate]=q2a(k,param,reconstruct)
     L=X'*X;
     
     
-    [v,d]=eigs(L,k);
+    [v,d]=eig(L);
     %d
     %pause;
     eig_vec=X*v;
     eig_vec=normc(eig_vec);
+    'fkdjslkfjd *****'
+   
+    d =diag(d);
+     %size(d)
+    %figure();
+    %plot(d);
+    eig_vec = eig_vec(:,end-k:end);
     %max(meanX)
     %max(eig_vec(:,1))
   
@@ -110,25 +121,23 @@ function [recog_rate]=q2a(k,param,reconstruct)
         for i =1:noOfEigenFaces
             %subplot(5,5,i,'Spacing', 0.03, 'Padding', 0, 'Margin', 0);
             %axis tight
-            %axis off
-            
+            %axis off  
             subplot(5,5,i);
             size(coeff(:,i))
             size(eig_vec(:,i))
-            prevSum = prevSum+eig_vec(:,i)*coeff(i,k);
+            %prevSum = prevSum+eig_vec(:,i)*sqrt(d(i));
+            
+            prevSum = meanX+eig_vec(:,i)*sqrt(d(i))/10;
             Fourier(i) = log(1+ norm(fft(prevSum)));
             h = imshow(reshape(prevSum,width,height));
             title(num2str(i));
-            set(h, 'ButtonDownFcn',{@callback,i})
+            %set(h, 'ButtonDownFcn',{@callback,i})
         end
+   
+        %figure()
+        %plot(Fourier);
     end
-    figure()
-    plot(Fourier);
-   function callback(o,e,idx)
-        %# show selected image in a new figure
-        figure(2), imshow(imgs{idx})
-        title(num2str(idx))
-    end
+   
     for i=1:noOfTestImages
         
        temp=coeff;
@@ -142,7 +151,7 @@ function [recog_rate]=q2a(k,param,reconstruct)
        [~,ind]=min(temp);
        
        
-       if(uint16(ind-1)/countEachFace==uint16(i-1)/countEachTestFace)
+       if(floor((ind-1)/countEachFace)==floor((i-1)/countEachTestFace))
            noOfHits=noOfHits+1;
        end
     end

@@ -4,8 +4,8 @@ function [recog_rate]=q2a(k,param,reconstruct)
     if(param==1)
         sizeOfImage=92*112;
         noOfFaces=35;
-        countEachFace=7;
-        countEachTestFace=3;
+        countEachFace=5;
+        countEachTestFace=5;
         height = 92;
         width = 112;
     else
@@ -64,7 +64,10 @@ function [recog_rate]=q2a(k,param,reconstruct)
         end 
     end
     
+    size(X(:,1))
     meanX=mean(X,2);
+    'mkfmkds'
+    size(meanX)
     
     for i=1:noOfImages
         X(:,i)=X(:,i)-meanX;
@@ -78,34 +81,59 @@ function [recog_rate]=q2a(k,param,reconstruct)
     L=X'*X;
     
     
-    [v,d]=eigs(L,k);
-   
+    [v,d]=eig(L);
+    %d
+    %pause;
     eig_vec=X*v;
     eig_vec=normc(eig_vec);
+    'fkdjslkfjd *****'
+   
+    d =diagonal(d);
+    figure();
+    plot(d);
+    eig_vec = eig_vec(:,end-k:end);
     %max(meanX)
     %max(eig_vec(:,1))
-    if(reconstruct)
-        k =1;
-        noOfEigenFaces= 25
-        %reconstructing X(:,k)
-        for i =1:noOfEigenFaces
-            
-        end
-        
-        
-    end
-    imshow(reshape(meanX,width,height));
+  
+    %imshow(reshape(meanX,width,height));
     
-    imshow(reshape(meanX + eig_vec(:,1),width,height));
+    %imshow(reshape(meanX + eig_vec(:,1),width,height));
     
     coeff=eig_vec'*X;
     testCoeff=eig_vec'*testImages; 
     size(testCoeff)
-    
+    size(eig_vec)
     noOfHits=0;
    
     %testCoeff = coeff;
     %size(coeff);
+      prevSum=meanX;
+      
+    if(reconstruct==1)
+        k =1;
+        noOfEigenFaces= 25
+        'fdjs'
+        Fourier = zeros(noOfEigenFaces,1);
+        %reconstructing X(:,k)
+        set(gca, 'LooseInset', get(gca,'TightInset'))
+        for i =1:noOfEigenFaces
+            %subplot(5,5,i,'Spacing', 0.03, 'Padding', 0, 'Margin', 0);
+            %axis tight
+            %axis off  
+            subplot(5,5,i);
+            size(coeff(:,i))
+            size(eig_vec(:,i))
+            prevSum = prevSum+eig_vec(:,i)*d(i);
+            Fourier(i) = log(1+ norm(fft(prevSum)));
+            h = imshow(reshape(prevSum,width,height));
+            title(num2str(i));
+            %set(h, 'ButtonDownFcn',{@callback,i})
+        end
+   
+        figure()
+        plot(Fourier);
+    end
+   
     for i=1:noOfTestImages
         
        temp=coeff;
@@ -119,7 +147,7 @@ function [recog_rate]=q2a(k,param,reconstruct)
        [~,ind]=min(temp);
        
        
-       if(uint16(ind-1)/countEachFace==uint16(i-1)/countEachTestFace)
+       if(floor((ind-1)/countEachFace)==floor((i-1)/countEachTestFace))
            noOfHits=noOfHits+1;
        end
     end
