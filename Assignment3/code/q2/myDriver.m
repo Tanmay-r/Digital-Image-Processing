@@ -10,11 +10,11 @@ if(q_no==2)
     recog_rate=k;
 
     for i=1:size(k,2)
-        recog_rate(1,i)=q2a(k(1,i),param,1,0);
+        recog_rate(1,i)=q2a(k(1,i),param,0,0);
     end
     recog_rate
     
 elseif(q_no==3)    
-    q2a(25,1,1,0);
+    q2a(175,1,1,0);
 end
     

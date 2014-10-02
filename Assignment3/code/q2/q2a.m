@@ -82,33 +82,27 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
     L=X'*X;
     
     
-    [v,d]=eig(L);
+    [v,D]=eig(L);  
+    [~, order] = sort(diag(D),'descend');
+    v = v(:,order);
     %d
     %pause;
     eig_vec=X*v;
     eig_vec=normc(eig_vec);
-   
-    d=diag(d);
-     %size(d)
-    %figure();
-    %plot(d);
-    d = d(end-k+1:end);
-    eig_vec = eig_vec(:,end-k+1:end);
-    %max(meanX)
-    %max(eig_vec(:,1))
-  
-    %imshow(reshape(meanX,width,height));
+    eig_vec=eig_vec(:,1:k);
+    %d=diag(d);
     
-    %imshow(reshape(meanX + eig_vec(:,1),width,height));
     
     coeff=eig_vec'*X;
     testCoeff=eig_vec'*testImages;
     noOfHits=0;
+    
+    
    
     
       
     if(reconstruct==1)
-        k =1;
+        %k =1;
         noOfEigenFaces= 25;
         Fourier = zeros(noOfEigenFaces,1);
         %reconstructing X(:,k)
@@ -135,12 +129,22 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
             %prevSum = prevSum+eig_vec(:,i)*sqrt(d(i));
             prevSum = normc(eig_vec(:,i));%*sqrt(d(i));
             
-            h =imshow(mat2gray(log(1+ abs(fftshift(fft2(reshape(prevSum*255,width,height)))))))
+            h =imshow(mat2gray(log(1+ abs(fftshift(fft2(reshape(prevSum*255,width,height)))))));
             %set(h, 'ButtonDownFcn',{@callback,i})
         end
-   
-        %figure()
-        %plot(Fourier);
+        
+        recons_k = [2, 10, 20, 50, 75, 100, 125, 150, 175];
+        temp=zeros(size(coeff,1),1);
+        for i =1:9
+            subplot(3,3,i);
+            temp(1:recons_k(1,i),1)=coeff(1:recons_k(1,i),1)';
+
+
+            img_rec=eig_vec*temp;
+            imshow(mat2gray(reshape(img_rec*255,width,height)));
+        end
+        pause;close
+        
     end
    
     for i=1:noOfTestImages
