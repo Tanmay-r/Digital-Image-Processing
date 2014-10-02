@@ -90,6 +90,7 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
      %size(d)
     %figure();
     %plot(d);
+    d = d(end-k+1:end);
     eig_vec = eig_vec(:,end-k+1:end);
     %max(meanX)
     %max(eig_vec(:,1))
@@ -124,8 +125,8 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
             %set(h, 'ButtonDownFcn',{@callback,i})
         end
    
-        figure()
-        plot(Fourier);
+        %figure()
+        %plot(Fourier);
     end
    
     for i=1:noOfTestImages
