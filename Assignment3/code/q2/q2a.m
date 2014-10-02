@@ -140,7 +140,7 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
             temp(1:recons_k(1,i),1)=coeff(1:recons_k(1,i),1)';
 
 
-            img_rec=eig_vec*temp;
+            img_rec=meanX+eig_vec*temp;
             imshow(mat2gray(reshape(img_rec*255,width,height)));
         end
         pause;close
@@ -179,12 +179,15 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
         new_L=new_X'*new_X;
 
     
-        [v,d]=eig(new_L);
+        [v,d]=eig(new_L);  
+        [~, order] = sort(diag(d),'descend');
+        v = v(:,order);
+    
         eig_vec=X*v;
         eig_vec=normc(eig_vec);
 
-        d =diag(d);
-        eig_vec = eig_vec(:,end-k:end);
+
+        eig_vec = eig_vec(:,1:k);
        
         coeff=eig_vec'*X;
         testCoeff=eig_vec'*testImages; 
