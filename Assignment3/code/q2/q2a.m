@@ -60,6 +60,8 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
             %pic=strcat(dir,int2str(j),'.pgm');
             img=imread(pic);
             img=img/255;
+            %figure, imshow(mat2gray(log(1+ abs(fftshift(fft2(img))))))
+            %pause
             testImages(:,testCount)=img(:);
             testCount=testCount+1;
         end 
@@ -118,10 +120,22 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
             subplot(5,5,i);
             %prevSum = prevSum+eig_vec(:,i)*sqrt(d(i));
             
-            prevSum = meanX+eig_vec(:,i)*sqrt(d(i));
+            prevSum = normc(eig_vec(:,i));%*sqrt(d(i));
             Fourier(i) = log(1+ norm(fft(prevSum)));
-            h = imshow(reshape(prevSum,width,height));
+            h = imshow(mat2gray(reshape(prevSum*255,width,height)));
             title(num2str(i));
+            %set(h, 'ButtonDownFcn',{@callback,i})
+        end
+        figure();
+        for i =1:noOfEigenFaces
+            %subplot(5,5,i,'Spacing', 0.03, 'Padding', 0, 'Margin', 0);
+            %axis tight
+            %axis off  
+            subplot(5,5,i);
+            %prevSum = prevSum+eig_vec(:,i)*sqrt(d(i));
+            prevSum = normc(eig_vec(:,i));%*sqrt(d(i));
+            
+            h =imshow(mat2gray(log(1+ abs(fftshift(fft2(reshape(prevSum*255,width,height)))))))
             %set(h, 'ButtonDownFcn',{@callback,i})
         end
    
