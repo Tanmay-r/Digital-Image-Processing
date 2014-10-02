@@ -1,4 +1,4 @@
-function [recog_rate]=q2a(k,param,reconstruct)
+function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
     
 
     if(param==1)
@@ -155,7 +155,72 @@ function [recog_rate]=q2a(k,param,reconstruct)
            noOfHits=noOfHits+1;
        end
     end
-    
+     'here'
     recog_rate=noOfHits/noOfTestImages;
+   
+    
+   if(checkRecognition==1)
+        'Doing Face Recognition'
+        noOfRecognised = 0;
+        notRecognisedNew = 0;
+        notRecognised = 0;
+        
+        
+        newFaces = 30;
+        new_X = X(:, newFaces*countEachFace);
+        new_L=new_X'*new_X;
+
+    
+        [v,d]=eig(new_L);
+        eig_vec=X*v;
+        eig_vec=normc(eig_vec);
+
+        d =diag(d);
+        eig_vec = eig_vec(:,end-k:end);
+       
+        coeff=eig_vec'*X;
+        testCoeff=eig_vec'*testImages; 
+
+        for i=1:noOfTestImages
+ 
+            temp=coeff;
+            dotProducts = zeros(noOfImages,1);
+            for j=1:noOfImages
+                dotProducts(j) = abs(sum(temp(:,j).*testCoeff(:,i)))/(norm(temp(:,j))*norm(testCoeff(:,i)));
+                 
+            end
+            'yo yo '
+            size(dotProducts)
+            [val,ind]=max(dotProducts);
+            val;
+            dotProducts(ind)
+            %pause
+            threshold = 0.9;
+            if(dotProducts(ind) > threshold)
+                if(floor((ind-1)/countEachFace)==floor((i-1)/countEachTestFace))
+                    noOfRecognised=noOfRecognised+1;
+                else
+                    notRecognised = notRecognised+1;
+                end
+                
+            else
+                if(floor((i-1)/countEachTestFace) < newFaces)
+                    notRecognised = notRecognised+1;
+                    
+                else
+                    notRecognisedNew = notRecognisedNew+1;
+                end
+            end
+        end
+       'Total Recognition: ' 
+       noOfTestImages
+       'No Of Recognised Faces' 
+       noOfRecognised
+       'Not Recognised'
+       notRecognised
+       'Not Recognised New'
+       notRecognisedNew
+       
+   end
  
 end

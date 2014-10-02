@@ -1,4 +1,4 @@
-function [recog_rate]=q2a(k,param,reconstruct)
+function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
     
 
     if(param==1)
@@ -38,6 +38,7 @@ function [recog_rate]=q2a(k,param,reconstruct)
         if(param==2 && i==14)
             continue;
         end
+        
         if(param==1)
             dir='../../att_faces/s';
         else
@@ -88,9 +89,10 @@ function [recog_rate]=q2a(k,param,reconstruct)
     eig_vec=normc(eig_vec);
     'fkdjslkfjd *****'
    
-    d =diagonal(d);
-    figure();
-    plot(d);
+    d =diag(d);
+     %size(d)
+    %figure();
+    %plot(d);
     eig_vec = eig_vec(:,end-k:end);
     %max(meanX)
     %max(eig_vec(:,1))
@@ -123,15 +125,17 @@ function [recog_rate]=q2a(k,param,reconstruct)
             subplot(5,5,i);
             size(coeff(:,i))
             size(eig_vec(:,i))
-            prevSum = prevSum+eig_vec(:,i)*d(i);
+            %prevSum = prevSum+eig_vec(:,i)*sqrt(d(i));
+            
+            prevSum = meanX+eig_vec(:,i)*sqrt(d(i))/10;
             Fourier(i) = log(1+ norm(fft(prevSum)));
             h = imshow(reshape(prevSum,width,height));
             title(num2str(i));
             %set(h, 'ButtonDownFcn',{@callback,i})
         end
    
-        figure()
-        plot(Fourier);
+        %figure()
+        %plot(Fourier);
     end
    
     for i=1:noOfTestImages
@@ -151,7 +155,67 @@ function [recog_rate]=q2a(k,param,reconstruct)
            noOfHits=noOfHits+1;
        end
     end
-    
+     'here'
     recog_rate=noOfHits/noOfTestImages;
+   
+    
+   if(checkRecognition==1)
+        'Doing Face Recognition'
+        noOfRecognised = 0;
+        notRecognisedNew = 0;
+        notRecognised = 0;
+        
+        
+        newFaces = 30;
+        new_X = X(:, newFaces*countEachFace);
+        new_L=new_X'*new_X;
+
+    
+        [v,d]=eig(new_L);
+        eig_vec=X*v;
+        eig_vec=normc(eig_vec);
+
+        d =diag(d);
+        eig_vec = eig_vec(:,end-k:end);
+       
+        coeff=eig_vec'*X;
+        testCoeff=eig_vec'*testImages; 
+
+        for i=1:noOfTestImages
+ 
+            temp=coeff;
+            dotProducts = zeros(noOfImages);
+            for j=1:noOfImages
+                dotProducts(j) = abs(temp(:,j)'*testCoeff(:,i))/(norm(temp(:,j))*norm(testCoeff(:,i)));
+                 
+            end
+            
+            [~,ind]=min(dotProducts);
+            threshold = 0.3;
+            if(dotProducts(ind) > threshold)
+                if(floor((ind-1)/countEachFace)==floor((i-1)/countEachTestFace))
+                    noOfRecognised=noOfRecognised+1;
+                else
+                    notRecognised = notRecognised+1;
+                end
+                
+            else
+                if(floor((i-1)/countEachTestFace) < newFaces)
+                    notRecognised = notRecognised+1;
+                    
+                else
+                    notRecognisedNew = notRecognisedNew+1;
+                end
+            end
+        end
+       'Total Recognition: ' 
+       noOfTestImages;
+       'No Of Recognised Faces' 
+       noOfRecognised;
+       'Not Recognised'
+       notRecognised;
+       'Not Recognised New'
+       
+   end
  
 end
