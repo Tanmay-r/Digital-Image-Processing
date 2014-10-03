@@ -196,6 +196,8 @@ function [recog_rate]=q2_3_4(k,param,reconstruct,checkRecognition)
        totaltestCoeff=eig_vec'*totalTestSet;
        notRecognised=0;
        noOfRecognised=0;
+            falsePositive =0;
+            falseNegative = 0;
        
        for i=1:225
  
@@ -208,8 +210,7 @@ function [recog_rate]=q2_3_4(k,param,reconstruct,checkRecognition)
             end
             [~,ind]=max(dotProducts);
             
-            
-            threshold = 0.7;
+            threshold = 0.7 ;
             if(dotProducts(ind) > threshold)
                 
                 if(i<=175)
@@ -219,9 +220,8 @@ function [recog_rate]=q2_3_4(k,param,reconstruct,checkRecognition)
                         notRecognised = notRecognised+1;
                     end
                 else
-               
+                    falsePositive =falsePositive+1;
                     notRecognised = notRecognised+1;
-              
                 end
                 
             else
@@ -229,6 +229,7 @@ function [recog_rate]=q2_3_4(k,param,reconstruct,checkRecognition)
                     noOfRecognised=noOfRecognised+1;
                     
                 else
+                    falseNegative =falseNegative+1;
                     notRecognised = notRecognised+1;
                 end
             end
@@ -237,7 +238,12 @@ function [recog_rate]=q2_3_4(k,param,reconstruct,checkRecognition)
     'rate'
     rate=noOfRecognised/(noOfRecognised+notRecognised);
     rate
+    'False Positive'
+    falsePositive
+    'False Negative'
+    falseNegative
     pause
+    
 
        
 

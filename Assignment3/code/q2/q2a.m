@@ -201,7 +201,7 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
                  
             end
             [~,ind]=max(dotProducts);
-            dotProducts(ind)
+            dotProducts(ind);
             %pause
             threshold = 0.6;
             if(dotProducts(ind) > threshold)
