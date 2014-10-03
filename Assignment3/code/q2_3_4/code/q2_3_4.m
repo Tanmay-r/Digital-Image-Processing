@@ -171,7 +171,7 @@ function [recog_rate]=q2_3_4(k,param,reconstruct,checkRecognition)
        count=1;
        for i=36:40,
             new_X=zeros(sizeOfImage,50);
-            dir='../../att_faces/s';
+            dir='../../../att_faces/s';
             dir=strcat(dir,int2str(i),'/');
 
             for j=1:10
@@ -207,11 +207,9 @@ function [recog_rate]=q2_3_4(k,param,reconstruct,checkRecognition)
                  
             end
             [~,ind]=max(dotProducts);
-            i
-            dotProducts(ind)
-            pause
             
-            threshold = 0.9;
+            
+            threshold = 0.7;
             if(dotProducts(ind) > threshold)
                 
                 if(i<=175)
