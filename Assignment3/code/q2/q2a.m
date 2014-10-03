@@ -200,7 +200,7 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
             [~,ind]=max(dotProducts);
             dotProducts(ind)
             %pause
-            threshold = 0.9;
+            threshold = 0.6;
             if(dotProducts(ind) > threshold)
                 if(floor((ind-1)/countEachFace)==floor((i-1)/countEachTestFace))
                     noOfRecognised=noOfRecognised+1;
@@ -217,14 +217,14 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
                 end
             end
         end
-%        'Total Recognition: ' 
-%        noOfTestImages
-%        'No Of Recognised Faces' 
-%        noOfRecognised
-%        'Not Recognised'
-%        notRecognised
-%        'Not Recognised New'
-%        notRecognisedNew
+        'Total Recognition: ' 
+        noOfTestImages
+        'No Of Recognised Faces' 
+        noOfRecognised
+        'Not Recognised'
+        notRecognised
+        'Not Recognised New'
+        notRecognisedNew
        
    end
  
