@@ -1,4 +1,4 @@
-function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
+function [recog_rate]=q2_3_4(k,param,reconstruct,checkRecognition)
     
 
     if(param==1)
@@ -30,6 +30,7 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
     X=zeros(sizeOfImage,noOfImages);
     testImages=zeros(sizeOfImage,noOfTestImages);
     
+   
     count=1;
     testCount=1;
     
@@ -40,9 +41,9 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
         end
         
         if(param==1)
-            dir='../../att_faces/s';
+            dir='../../../att_faces/s';
         else
-            dir='../../CroppedYale_Subset/CroppedYale_Subset/';
+            dir='../../../CroppedYale_Subset/CroppedYale_Subset/';
         end
         
         dir=strcat(dir,int2str(i),'/');
@@ -77,6 +78,7 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
     for i=1:noOfTestImages
         testImages(:,i)=testImages(:,i)-meanX;
     end
+     
     
     
     L=X'*X;
@@ -106,44 +108,42 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
         noOfEigenFaces= 25;
         Fourier = zeros(noOfEigenFaces,1);
         %reconstructing X(:,k)
+        
+        'eigenfaces'
         set(gca, 'LooseInset', get(gca,'TightInset'))
-        for i =1:noOfEigenFaces
-            %subplot(5,5,i,'Spacing', 0.03, 'Padding', 0, 'Margin', 0);
-            %axis tight
-            %axis off  
+        for i =1:noOfEigenFaces 
             subplot(5,5,i);
-            %prevSum = prevSum+eig_vec(:,i)*sqrt(d(i));
-            
             prevSum = normc(eig_vec(:,i));%*sqrt(d(i));
             Fourier(i) = log(1+ norm(fft(prevSum)));
-            h = imshow(mat2gray(reshape(prevSum*255,width,height)));
+            pic=mat2gray(reshape(prevSum*255,width,height));
+            imshow(pic);
             title(num2str(i));
-            %set(h, 'ButtonDownFcn',{@callback,i})
         end
-        figure();
-        for i =1:noOfEigenFaces
-            %subplot(5,5,i,'Spacing', 0.03, 'Padding', 0, 'Margin', 0);
-            %axis tight
-            %axis off  
-            subplot(5,5,i);
-            %prevSum = prevSum+eig_vec(:,i)*sqrt(d(i));
-            prevSum = normc(eig_vec(:,i));%*sqrt(d(i));
-            
-            h =imshow(mat2gray(log(1+ abs(fftshift(fft2(reshape(prevSum*255,width,height)))))));
-            %set(h, 'ButtonDownFcn',{@callback,i})
-        end
+        save_image(pic,'../images/eigenfaces.png',0);
         
+        
+        'fourier'
+        for i =1:noOfEigenFaces
+             
+            subplot(5,5,i);
+            prevSum = normc(eig_vec(:,i));
+            pic=mat2gray(log(1+ abs(fftshift(fft2(reshape(prevSum*255,width,height))))));
+            imshow(pic);
+        end
+        save_image(pic,'../images/fourier.png',0);
+        
+        'reconstruction'
         recons_k = [2, 10, 20, 50, 75, 100, 125, 150, 175];
         temp=zeros(size(coeff,1),1);
         for i =1:9
             subplot(3,3,i);
             temp(1:recons_k(1,i),1)=coeff(1:recons_k(1,i),1)';
-
-
             img_rec=meanX+eig_vec*temp;
-            imshow(mat2gray(reshape(img_rec*255,width,height)));
+            pic=mat2gray(reshape(img_rec*255,width,height));
+            imshow(pic);
         end
-        pause;close
+        save_image(pic,'../images/reconstruction.png',0);
+        
         
     end
    
@@ -168,67 +168,79 @@ function [recog_rate]=q2a(k,param,reconstruct,checkRecognition)
    
     
    if(checkRecognition==1)
-        'Doing Face Recognition'
-        noOfRecognised = 0;
-        notRecognisedNew = 0;
-        notRecognised = 0;
-        
-        
-        newFaces = 30;
-        new_X = X(:, newFaces*countEachFace);
-        new_L=new_X'*new_X;
+       count=1;
+       for i=36:40,
+            new_X=zeros(sizeOfImage,50);
+            dir='../../../att_faces/s';
+            dir=strcat(dir,int2str(i),'/');
 
-    
-        [v,D]=eig(L);  
-        [~, order] = sort(diag(D),'descend');
-        v = v(:,order);
-    
-        eig_vec=X*v;
-        eig_vec=normc(eig_vec);
-
-        d =diag(d);
-        eig_vec = eig_vec(:,end-k:end);
+            for j=1:10
+                pic=strcat(dir,int2str(j),'.pgm');
+                img=imread(pic);
+                img=img/255;
+                new_X(:,count)=img(:);
+                count=count+1;
+            end
+       end
        
-        coeff=eig_vec'*X;
-        testCoeff=eig_vec'*testImages; 
-
-        for i=1:noOfTestImages
+       for i=1:50
+        new_X(:,i)=new_X(:,i)-meanX;
+       end
+    
+       
+       
+       
+       totalTestSet=zeros(sizeOfImage,225);
+       totalTestSet(:,1:175)=testImages;
+       totalTestSet(:,176:225)=new_X;
+       totaltestCoeff=eig_vec'*totalTestSet;
+       notRecognised=0;
+       noOfRecognised=0;
+       
+       for i=1:225
  
             temp=coeff;
-            dotProducts = zeros(noOfImages,1);
-            for j=1:noOfImages
-                dotProducts(j) = abs(sum(temp(:,j).*testCoeff(:,i)))/(norm(temp(:,j))*norm(testCoeff(:,i)));
+            
+            dotProducts = zeros(size(coeff,2),1);
+            for j=1:size(coeff,2)
+                dotProducts(j) = abs(sum(temp(:,j).*totaltestCoeff(:,i)))/(norm(temp(:,j))*norm(totaltestCoeff(:,i)));
                  
             end
             [~,ind]=max(dotProducts);
-            dotProducts(ind)
-            %pause
-            threshold = 0.9;
+            
+            
+            threshold = 0.7;
             if(dotProducts(ind) > threshold)
-                if(floor((ind-1)/countEachFace)==floor((i-1)/countEachTestFace))
-                    noOfRecognised=noOfRecognised+1;
+                
+                if(i<=175)
+                    if(floor((ind-1)/5)==floor((i-1)/5))
+                        noOfRecognised=noOfRecognised+1;
+                    else
+                        notRecognised = notRecognised+1;
+                    end
                 else
+               
                     notRecognised = notRecognised+1;
+              
                 end
                 
             else
-                if(floor((i-1)/countEachTestFace) < newFaces)
-                    notRecognised = notRecognised+1;
+                if(i>175)
+                    noOfRecognised=noOfRecognised+1;
                     
                 else
-                    notRecognisedNew = notRecognisedNew+1;
+                    notRecognised = notRecognised+1;
                 end
             end
-        end
-%        'Total Recognition: ' 
-%        noOfTestImages
-%        'No Of Recognised Faces' 
-%        noOfRecognised
-%        'Not Recognised'
-%        notRecognised
-%        'Not Recognised New'
-%        notRecognisedNew
+       end
+        
+    'rate'
+    rate=noOfRecognised/(noOfRecognised+notRecognised);
+    rate
+    pause
+
        
+
    end
  
 end
