@@ -41,7 +41,7 @@ function [ new_image ] = reconstruct(Database,image,S,K)
     
     for i=1:S+1
         for j =1:S+1
-            new_image(i,j) = pxTexton(ceil(size(pxTexton,1)/2),Idx(i*(S+1) + j));
+            new_image(i,j) = pxTexton(ceil(size(pxTexton,1)/2),Idx((i-1)*(S+1) + j));
         end
     end  
     
