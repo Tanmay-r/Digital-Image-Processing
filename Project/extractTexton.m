@@ -1,4 +1,4 @@
-function [ texton ] = extractTexton( image, Database)
+function [ texton ] = extractTextonP( image, Database, no_of_pixels)
 %UNTITLED2 This function helps you extract texton from a particular texture
 %   Detailed explanation goes here
 
@@ -8,24 +8,30 @@ function [ texton ] = extractTexton( image, Database)
    noOfFilter = size(Database,3);
    filterheight =  size(Database,1);
    filterwidth = size(Database,2);
-   texton = zeros(height,width,noOfFilter);
+   texton = zeros(no_of_pixels,noOfFilter);
    imagePadded = zeros(height+filterheight, width+filterwidth);
-   
+    
    assert(filterwidth == filterheight, 'filter should be square');
    offset = (filterwidth-1)/2;
    currentPixel = 1;
+   i =  rand(1,no_of_pixels)*(imageSize(1)-2*offset) + offset+1;
+   j =  rand(1,no_of_pixels)*(imageSize(2)-2*offset) + offset+1;
+   i = floor(i);
+   j = floor(j);
+   offset;
    for k=1:noOfFilter 
-       filter = Database(k);
+       filter = Database(:,:,k);
+       
+       for n=1:no_of_pixels
+           in = i(n);
+           jn = j(n);
+           small_image = image(in-offset:in+offset,jn-offset:jn+offset);
+           texton(n,k) = sum(filter(:)'*small_image(:));
        % pad image with filter size
-       for i=1+offset:imageSize(1)+offset
-           for j=1+offset:imageSize(2)+offset
-                temp = imagePadded(i-offset:i+offset,j-offset:j+offset); 
-                val = temp.*filter;
-                val = sum(val(:));
-                texton(currentPixel,k) = val;
-                currentPixel = currentPixel +1;
-           end
        end
    end
+   
 end
+
+
 
