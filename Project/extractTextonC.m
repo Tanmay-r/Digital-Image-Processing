@@ -1,6 +1,7 @@
-function [texton] = extractTextonC( image, Database,s)
+function [texton] = extractTextonC( image, Database, s)
 %UNTITLED2 This function helps you extract texton from a particular texture
 %   Detailed explanation goes here
+% s must be even
 
    imageSize = size(image);
    height = imageSize(1);
@@ -18,8 +19,8 @@ function [texton] = extractTextonC( image, Database,s)
    for k=1:noOfFilter
        filter = Database(:,:,k);
        n=1;
-       for in=height/2-s:height/2+s
-           for jn=width/2-s:width/2+s
+       for in=height/2-s/2:height/2+s/2
+           for jn=width/2-s/2:width/2+s/2
                 in;
                 jn;
                 small_image = image(in-offset:in+offset,jn-offset:jn+offset);
@@ -27,7 +28,8 @@ function [texton] = extractTextonC( image, Database,s)
                 n = n+1;
            end
        end
-       
+       imagesc(texton);
+       %imshow(image(height/2-s:height/2+s,width/2-s:width/2+s));
        % pad image with filter size
     end
 end
