@@ -1,0 +1,132 @@
+\title{Assignment 4 Question 3: CS 663, Digital Image Processing}
+\author{
+Tanmay Randhavane, 110050010 \\
+Nilesh Kulkarni, 110050008 \\
+Deepali Adlakha, 11d170020
+}
+
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{ulem}
+%\usepackage[margin=0.5in]{geometry}
+\begin{document}
+\maketitle
+
+Consider a matrix $\mathbf{A}$ of size $m \times n$. Define $\mathbf{P} = \mathbf{A}^T \mathbf{A}$ and $\mathbf{Q} = \mathbf{A}\mathbf{A}^T$.
+\begin{enumerate}
+\item Prove that for any vector $\mathbf{y}$ with appropriate number of elements, we have $\mathbf{y}^t \mathbf{Py} \geq 0$. Similarly show that $\mathbf{z}^t \mathbf{Qz} \geq 0$ for a vector $\mathbf{z}$ with appropriate number of elements. Why are the eigenvalues of $\mathbf{P}$ and $\mathbf{Q}$ non-negative? \\
+$\mathbf{A}$ is of size $m \times n$ and $\mathbf{P} = \mathbf{A}^T \mathbf{A}$ \\
+$\therefore$ $\mathbf{P}$ is of size $n \times n$ \\
+Let $\mathbf{y}$ be any vector of size $n \times 1$, \\
+Consider, 
+\begin{eqnarray*}
+\mathbf{y}^t \mathbf{Py} &=& \mathbf{y}^t  \mathbf{A}^T \mathbf{Ay} \\
+&=& (\mathbf{Ay})^T \mathbf{Ay} \\
+&=& \Sigma (\mathbf{Ay}) _i ^2 \\
+&\geq& 0
+\end{eqnarray*}
+$\mathbf{Q} = \mathbf{A}\mathbf{A}^T$ \\
+$\therefore$ $\mathbf{Q}$ is of size $m \times m$ \\
+Let $\mathbf{z}$ be any vector of size $m \times 1$, \\
+Consider, 
+\begin{eqnarray*}
+\mathbf{z}^t \mathbf{Qz} &=& \mathbf{z}^t  \mathbf{AA}^T \mathbf{z} \\
+&=& (\mathbf{A}^T \mathbf{z})^T \mathbf{A}^T \mathbf{z} \\
+&=& \Sigma (\mathbf{A}^T \mathbf{z}) _i ^2 \\
+&\geq& 0
+\end{eqnarray*}
+Let $\lambda$ be any eigenvalue of $\mathbf{P}$, then
+\begin{eqnarray*}
+\mathbf{Py} &=& \lambda \mathbf{y} \\
+\mathbf{y}^t \mathbf{Py} &=& \lambda  \mathbf{y}^t \mathbf{y} \\
+\therefore\:\lambda  \mathbf{y}^t \mathbf{y} &\geq& 0 \:(from\,previous\,results)\\
+But,\:\mathbf{y}^t \mathbf{y} &\geq& 0\:(length\,of\,\mathbf{y}) \\
+\therefore\:\lambda &\geq& 0
+\end{eqnarray*}
+Similary, let $\lambda$ be any eigenvalue of $\mathbf{P}$, then
+\begin{eqnarray*}
+\mathbf{Qy} &=& \lambda \mathbf{y} \\
+\mathbf{y}^t \mathbf{Qy} &=& \lambda  \mathbf{y}^t \mathbf{y} \\
+\therefore\:\lambda  \mathbf{y}^t \mathbf{y} &\geq& 0 \:(from\,previous\,results)\\
+But,\:\mathbf{y}^t \mathbf{y} &\geq& 0\:(length\,of\,\mathbf{y}) \\
+\therefore\:\lambda &\geq& 0
+\end{eqnarray*}
+\\
+\item If $\mathbf{u}$ is an eigenvector of $\mathbf{P}$ with eigenvalue $\lambda$, show that $\mathbf{Au}$ is an eigenvector of $\mathbf{Q}$ with eigenvalue $\lambda$. If $\mathbf{v}$ is an eigenvector of $\mathbf{Q}$ with eigenvalue $\mu$, show that $\mathbf{A}^T\mathbf{v}$ is an eigenvector of $\mathbf{P}$ with eigenvalue $\mu$. What will be the number of elements in $\mathbf{u}$ and $\mathbf{v}$?\\
+Let $\mathbf{u}$ be a eigenvector of $\mathbf{P}$ with eigenvalue $\lambda$, then
+\begin{eqnarray*}
+\mathbf{Pu} &=& \lambda \mathbf{u} \\
+\mathbf{APu} &=& \lambda \mathbf{Au}\\
+\mathbf{AA}^T\mathbf{Au} &=& \lambda \mathbf{Au}\\
+\mathbf{QAu} &=& \lambda \mathbf{Au} \\
+\end{eqnarray*}
+Therefore, 
+$\mathbf{Au}$ is an eigenvector of $\mathbf{Q}$ with eigenvalue $\lambda$. \\
+
+Similarly,\\
+Let $\mathbf{v}$ be a eigenvector of $\mathbf{Q}$ with eigenvalue $\mu$, then
+\begin{eqnarray*}
+\mathbf{Qv} &=& \mu \mathbf{v} \\
+\mathbf{A}^T\mathbf{Qv} &=& \mu \mathbf{A}^T\mathbf{v}\\
+\mathbf{A}^T\mathbf{AA}^T\mathbf{v} &=& \mu \mathbf{A}^T\mathbf{v}\\
+\mathbf{PA}^T\mathbf{v} &=& \mu \mathbf{A}^T\mathbf{v} \\
+\end{eqnarray*}
+Therefore, 
+$\mathbf{A}^T\mathbf{v}$ is an eigenvector of $\mathbf{P}$ with eigenvalue $\mu$. \\
+
+$\mathbf{P}$ is of size $n \times n$ \\
+$\therefore$ $\mathbf{u}$ has $n$ elements. \\
+While, $\mathbf{Q}$ is of size $m \times m$ \\
+$\therefore$ $\mathbf{v}$ has $m$ elements. \\
+\item If $\mathbf{v}_i$ is an eigenvector of $\mathbf{Q}$ and we define $\mathbf{u}_i = \dfrac{\mathbf{A}^T \mathbf{v}_i}{\|\mathbf{A}^T \mathbf{v}_i\|}$. Then prove that there will exist some real, non-negative $\gamma_i$ such that $\mathbf{Au}_i = \gamma_i \mathbf{v}_i$.\\
+$\mathbf{v}_i$ is an eigenvector of $\mathbf{Q}$ with eigenvalue $\lambda$. \\
+Therefore,
+\begin{eqnarray*}
+\mathbf{Qv}_i &=& \lambda \mathbf{v}_i \\
+\mathbf{AA}^T\mathbf{v}_i &=& \lambda \mathbf{v}_i\\
+\mathbf{A}\dfrac{\mathbf{A}^T\mathbf{v}_i}{\|\mathbf{A}^T \mathbf{v}_i\|} &=& \dfrac{\lambda }{\|\mathbf{A}^T \mathbf{v}_i\|}\mathbf{v}_i \\
+\mathbf{Au}_i &=& \gamma_i \mathbf{v}_i \\
+where,\, \gamma_i = \dfrac{\lambda }{\|\mathbf{A}^T \mathbf{v}_i\|} 
+\end{eqnarray*}
+
+\item It can be shown that $\mathbf{u}^T_i \mathbf{u}_j = 0$ for $i \neq j$ and likewise $\mathbf{v}^T_i \mathbf{v}_j = 0$ for $i \neq j$ for correspondingly distinct eigenvalues.\footnote{This follows because $\mathbf{P}$ and $\mathbf{Q}$ are symmetric matrices. Consider $\mathbf{Pu}_1 = \lambda_1 \mathbf{u}_1$ and $\mathbf{Pu}_2 = \lambda_2 \mathbf{u}_2$. Then $\mathbf{u}^T_2 \mathbf{P u}_1 = \lambda_1 \mathbf{u}^T_2 \mathbf{u}_1$. But $\mathbf{u}^T_2 \mathbf{P} \mathbf{u}_1$ also equal to $(\mathbf{P}^T \mathbf{u}_2)^T \mathbf{u}_1 = (\mathbf{P} \mathbf{u}_2)^T \mathbf{u}_1 = (\lambda_2 \mathbf{u}_2)^T \mathbf{u}_1 = \lambda_2 \mathbf{u}^T_2 \mathbf{u}_1$. Hence $\lambda_2 \mathbf{u}^T_2 \mathbf{u}_1 = \lambda_1 \mathbf{u}^T_2 \mathbf{u}_1$. Since $\lambda_2 \neq \lambda_1$, we must have $\mathbf{u}^T_2 \mathbf{u}_1 = 0$. }. Now, define $\mathbf{U} = [\mathbf{v}_1 | \mathbf{v}_2 | \mathbf{v}_3 | ...|\mathbf{v}_m]$ and $\mathbf{V} = [\mathbf{u}_1 | \mathbf{u}_2 | \mathbf{u}_3 | ... |\mathbf{u}_n]$. Now show that $\mathbf{A} = \mathbf{U} \mathbf{\Gamma} \mathbf{V}^T$ where $\mathbf{\Gamma}$ is a diagonal matrix containing the non-negative values $\gamma_1, \gamma_2, ..., \gamma_n$. With this, you have just established the existence of the singular value decomposition of any matrix $\mathbf{A}$. This is a key result in linear algebra and it is widely used in image processing, computer vision, computer graphics, statistics, machine learning, numerical analysis, natural language processing and data mining. \textsf[5 + 5 + 5 + 5 = 20 points]\\
+Let,\\ $\mathbf{v}_i$ be an eigenvector of $\mathbf{Q}$.\\
+From, result of part (b) and (c), $\mathbf{u}_i = \dfrac{\mathbf{A}^T \mathbf{v}_i}{\sigma_i}$ is an eigenvector of $\mathbf{P}$\\
+where, $\sigma_{i} = \|\mathbf{A}^T \mathbf{v}_i\|$\\
+Consider,\\
+\begin{eqnarray*}
+\mathbf{u}_i^T \mathbf{A}^T \mathbf{v}_j &=& \dfrac{(\mathbf{A}^T\mathbf{v}_i)^T\mathbf{A}^T \mathbf{v}_j}{\sigma_{i}}\\
+&=& \dfrac{\mathbf{v}_i^T\mathbf{A}\mathbf{A}^T \mathbf{v}_j}{\sigma_{i}} \\
+&=& \dfrac{\mathbf{v}_i^T\mathbf{Q} \mathbf{v}_j}{\sigma_{i}} \\
+&=& \dfrac{\mathbf{v}_i^T\mathbf{Q} \mathbf{v}_j}{\sigma_{i}} \\
+&=& \dfrac{\mu_{i} \mathbf{v}_i^T\mathbf{v}_j}{\sigma_{i}} \\
+\end{eqnarray*}
+Therefore, $\mathbf{u}_i^T \mathbf{A}^T \mathbf{v}_j = 0$ if $i \neq j$ and $\gamma_i$ for  $i = j$\\
+Now, define $\mathbf{U} = [\mathbf{v}_1 | \mathbf{v}_2 | \mathbf{v}_3 | ...|\mathbf{v}_m]$ and $\mathbf{V} = [\mathbf{u}_1 | \mathbf{u}_2 | \mathbf{u}_3 | ... |\mathbf{u}_n]$\\
+Therefore,
+\begin{eqnarray*}
+\mathbf{V}^T\mathbf{A}^T\mathbf{U} &=& \mathbf{\Sigma}\\
+\end{eqnarray*}
+where $\Sigma$ is a $n \times m$ matrix with $\Sigma_ii = \gamma_i$ and $\Sigma_ij = 0$ for 
+$i \neq j$ \\
+Taking transpose,
+\begin{eqnarray*}
+\mathbf{U}^T\mathbf{A}\mathbf{V} &=& \mathbf{\Sigma}^T\\
+\end{eqnarray*}
+Since, $\mathbf{u}^T_i \mathbf{u}_j = 0$ for $i \neq j$ and likewise $\mathbf{v}^T_i \mathbf{v}_j = 0$ for $i \neq j$, \\
+$\mathbf{U}$ and $\mathbf{V}$ are orthonormal.
+Therefore,
+\begin{eqnarray*}
+\mathbf{UU}^T\mathbf{A}\mathbf{VV}^T &=& \mathbf{U\Sigma}^T\mathbf{V}^T\\
+\mathbf{A} &=& \mathbf{U\Sigma}^T\mathbf{V}^T\\
+\mathbf{A} &=& \mathbf{U\Gamma}\mathbf{V}^T\\
+\end{eqnarray*}
+\end{enumerate}
+
+
+\end{document}
