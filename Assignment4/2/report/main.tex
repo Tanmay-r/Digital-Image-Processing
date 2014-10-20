@@ -1,0 +1,69 @@
+\title{Assignment 4 Question 2: CS 663, Digital Image Processing}
+\author{
+Tanmay Randhavane, 110050010 \\
+Nilesh Kulkarni, 110050007 \\
+Deepali Adlakha, 11d170020
+}
+
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{ulem}
+%\usepackage[margin=0.5in]{geometry}
+\begin{document}
+
+\maketitle
+Suppose you are standing in a well-illuminated room with a large window, and you take a picture of the scene outside. The window undesirably acts as a semi-reflecting surface, and hence the picture will contain a reflection of the scene inside the room, besides the scene outside. While solutions exist for separating the two components from a single picture, here you will look at a simpler-to-solve version of this problem where you would take two pictures. The first picture $g_1$ is taken by adjusting your camera lens so that the scene outside ($f_1$) is in focus (we will assume that the scene outside has negligible depth variation when compared to the distance from the camera, and so it makes sense to say that the entire scene outside is in focus), and the reflection off the window surface ($f_2$) will now be defocussed or blurred.  This can be written as $g_1 = f_1 + h_2 * f_2$ where $h_2$ stands for the blur kernel that acted on $f_2$. The second picture $g_2$ is taken by focusing the camera onto the surface of the window, with the scene outside being defocussed. This can be written as $g_2 = h_1 * f_1 + f_2$. Given $g_1$ and $g_2$, and assuming $h_1$ and $h_2$ are known, your task is to derive a formula to determine $f_1$ and $f_2$. Note that we are making the simplifying assumption that there was no relative motion between the camera and the scene outside while the two pictures were being acquired, and that there were no changes whatsoever to the scene outside or inside. Even with all these assumptions, you will notice something inherently problematic about the formula you will derive. What is it? What do you think the effect of noise (in $g_1$ and $g_2$) will be on the accuracy of your solution (be careful)? \\
+
+Given,\\
+\begin{eqnarray*}
+g_1 &=& f_1 + h_2 * f_2\:\:\: h_2\, stands\, for\, the\, blur\, kernel\, and,\\
+g_2 &=& h_1 * f_1 + f_2\:\:\: h_1\, stands\, for\, the\, blur\, kernel\, \\
+\end{eqnarray*}
+
+Applying Fourier Transforms to above equations\\
+\begin{eqnarray*}
+G_1 &=& F_1 + H_2 F_2 \\
+G_2 &=& H_1 F_1 + F_2 \\
+\end{eqnarray*}
+\\
+Solving the above two equations 
+
+\begin{eqnarray*}
+F_1 &=& \dfrac{G_1 -G_2 H_2}{1 - H_1 H_2}\\
+F_2 &=& \dfrac{G_2 -G_1 H_1}{1 - H_1 H_2}\\
+\end{eqnarray*}
+\\
+
+The problem with above method is that there is possibility of denominator $1- H_1 H_2$ tending to zero this leads to $F_1$ being in $\dfrac{0}{0}$ form.
+\\
+Now adding noise to the images
+
+\begin{eqnarray*}
+g_1 &=& f_1 + h_2 * f_2 + n_1\:\:\: h_2\, stands\, for\, the\, blur\, kernel\, and,\\
+g_2 &=& h_1 * f_1 + f_2 + n_2\:\:\: h_1\, stands\, for\, the\, blur\, kernel\, \\
+\end{eqnarray*}
+
+Applying Fourier Transforms to above equations\\
+\begin{eqnarray*}
+G_1 &=& F_1 + H_2 F_2 + N_1 \\
+G_2 &=& H_1 F_1 + F_2 + N_1\\
+\end{eqnarray*}
+\\
+Solving the above two equations 
+
+\begin{eqnarray*}
+F_1 &=& \dfrac{G_1 -G_2 H_2}{1 - H_1 H_2} + \dfrac{N_2 H_2 - N_1}{1 - H_1 H_2}\\
+F_2 &=& \dfrac{G_2 -G_1 H_1}{1 - H_1 H_2} + \dfrac{N_1 H_1 - N_2}{1 - H_1 H_2}\\
+\end{eqnarray*}
+
+Adding noise to the equations leads to the scenario where at High frequencies the fourier transforms for the noise will be significant. And at high frequencies the product $H_1H_2$ is $\sim 0$ . The term $N_2 H_2$ will be quite low $H_2$ acting as a low pass filter. So noise $N_1$ will directly get added without amplications to $F_1$. Similarly applies for $F_2$
+
+
+
+
+\end{document}
