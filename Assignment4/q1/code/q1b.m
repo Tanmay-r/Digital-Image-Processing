@@ -44,11 +44,17 @@ function q1b()
     
     Y=Y./count_Y;
     
-    imwrite(mat2gray(X),'../images/noisy_image.png');
-    imwrite(mat2gray(Y),'../images/denoised_patchBased_image.png');
+%     imwrite(mat2gray(X),'../images/noisy_image.png');
+%     imwrite(mat2gray(Y),'../images/denoised_patchBased_image.png');
     
-    imshow(mat2gray(X));
-    imshow(mat2gray(Y));
+%     imshow(mat2gray(X));
+%     imshow(mat2gray(Y));
+
+
+    
+    save_image2(mat2gray(X),'../images/noisy_image.png',0);
+    save_image2(mat2gray(Y),'../images/denoised_image_1b.png',0);
+    
     
     'RMSE'
     sqrt(mean(mean((double(Y) - double(origX)).^2,2),1)/(size(origX,1)*size(origX,2)))

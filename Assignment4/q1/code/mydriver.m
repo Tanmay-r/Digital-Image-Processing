@@ -1,0 +1,5 @@
+function myDriver()
+addpath('../common/export_fig/')
+addpath('../common/')
+q1a()
+q1b()
