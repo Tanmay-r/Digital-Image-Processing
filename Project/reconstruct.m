@@ -1,50 +1,52 @@
-function [ new_image ] = reconstruct(Database,image,S,K)
+function [ new_image ] = reconstruct(Database,image,K)
 
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
     
     %apply K-means here
-    texton = extractTextonC(image,Database,S);
-    [Idx, KTextons] = kmeans(texton,K);
-   
-    %size(texton,2) = no of pixels (S+1)*(S+1) means
-    %size(texton,1) = no of Filters
-    %size(F,1) = 49*49;
-    %size(F,2) = no_of_filters_in_filter_bank;
+
+    texton = extractTextonC(image,Database);
+    textonVector = zeros(size(texton,1)*size(texton,2), size(texton,3));
+    for i=1:size(texton,3)
+        temp= texton(:,:,i);
+        textonVector(:,i)  = temp(:);
+    end
+    [Idx, KTextons] = kmeans(textonVector,K);
     
-    F = zeros(size(Database,1)*size(Database,2),size(Database,3));
+    'Done with K-means'
+    
+    
+    F = zeros(size(Database,3),size(Database,1)*size(Database,2));
     
     for i=1:size(Database,3)
         A = Database(:,:,i);
-        F(:,i) = A(:);
+        F(i,:) = A(:);
     end
-    pxTexton = zeros(size(F,1),size(KTextons,1));
+
+    'wohafd;lfjldsj'
+    pxTexton = zeros(size(F,2),size(KTextons,1));
     size(KTextons)
     size(pxTexton)
     'asdlfk'
     size(F)
-    %F*P = T
-    %F = 48X2401 
-    %P = 2401X1
-    %T = 48X1
-    
+    size(KTextons)
+    size(pxTexton)
     for i=1:size(KTextons,1)
-        
-        pxTexton(:,i) = F'\KTextons(i,:)';
+        pxTexton(:,i) = F\KTextons(i,:)';
+        temp=vec2mat(pxTexton(:,i),49);
+        imshow(temp);
+        pause;
         %size(F'\KTextons(i,:)')
-        
-        
     end
     
     
-    new_image = zeros(S+1,S+1);
+    new_image = zeros(size(image,1),size(image,2));
     
-    for i=1:S+1
-        for j =1:S+1
-            new_image(i,j) = pxTexton(ceil(size(pxTexton,1)/2),Idx((i-1)*(S+1) + j));
+    for i=1:size(image,1)
+        for j =1:size(image,2)
+            new_image(i,j) = pxTexton(ceil(size(F,2)/2),Idx((i-1)*size(image,2) + j));
         end
     end  
-    
-    imshow(new_image);  
+    imshow(new_image)  
 end
 
