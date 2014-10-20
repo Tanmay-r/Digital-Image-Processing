@@ -1,4 +1,4 @@
-function [ new_image] = myDriver(imageName)
+function [ new_image] = myDriver(imageName,k)
 
     %UNTITLED Summary of this function goes here
     %Detailed explanation goes here
@@ -11,7 +11,8 @@ function [ new_image] = myDriver(imageName)
     %texton = extractTextonC(image,Database);
     % Database = Database(:,:,1:4);
     
-    new_image = reconstruct(Database,image,10);
+
+    new_image = reconstruct(Database,image,k);
 
     
 end

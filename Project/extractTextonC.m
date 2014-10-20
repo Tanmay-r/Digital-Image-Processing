@@ -8,10 +8,25 @@ function [texton] = extractTextonC(image, Database)
    width = imageSize(2);
    noOfFilter = size(Database,3);
    texton = zeros(width,height,noOfFilter);
+
+   F = zeros(size(Database,3),size(Database,1)*size(Database,2));
+    
+    for i=1:size(Database,3)
+        A = Database(:,:,i);
+        F(i,:) = A(:);
+    end
+
    for k=1:noOfFilter
        filter = Database(:,:,k);
        size(filter);
        texton(:,:,k) = conv2(image,filter,'same');
-       
     end
+
+    % temp=texton(256,256,:);
+    % temp=vec2mat(pinv(F)*temp(:),49);
+    % imshow(mat2gray(temp));
+    % figure()
+    % imshow(mat2gray(image(232:280,232:280)));
+    % pause;
+
 end
