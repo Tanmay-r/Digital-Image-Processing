@@ -7,6 +7,9 @@ function q1a()
     
     [origX, ~] = imread('../images/barbara256-part.png');
     origX = double(origX);
+    
+    save_image2(mat2gray(origX),'../images/original_image.png',0);
+    
     X = origX + randn(size(origX))*sigma;
  
     row_lim=size(X,1);
@@ -68,11 +71,12 @@ function q1a()
     
     Y=Y./count_Y;
     
-    imwrite(mat2gray(X),'../images/noisy_image.png');
-    imwrite(mat2gray(Y),'../images/denoised_image.png');
+%     imwrite(mat2gray(X),'../images/noisy_image.png');
+%     imwrite(mat2gray(Y),'../images/denoised_image.png');
     
-    imshow(mat2gray(X));
-    imshow(mat2gray(Y));
+    save_image2(mat2gray(X),'../images/noisy_image.png',0);
+    save_image2(mat2gray(Y),'../images/denoised_image.png',0);
+    
     
     'RMSE'
     sqrt(mean(mean((double(Y) - double(origX)).^2,2),1)/(size(origX,1)*size(origX,2)))
