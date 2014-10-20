@@ -32,8 +32,8 @@ function [ new_image ] = reconstruct(Database,image,K)
     size(KTextons)
     size(pxTexton)
     for i=1:size(KTextons,1)
-        %pxTexton(:,i) = pinv(F)*KTextons(i,:)';
-        pxTexton(:,i) = F\KTextons(i,:)';
+        pxTexton(:,i) = pinv(F)*KTextons(i,:)';
+        %pxTexton(:,i) = F\KTextons(i,:)';
         
         temp=vec2mat(pxTexton(:,i),49);
         imshow(mat2gray(temp));
