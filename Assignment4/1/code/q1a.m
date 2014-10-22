@@ -79,7 +79,7 @@ function q1a()
     
     
     'RMSE'
-    sqrt(mean(mean((double(Y) - double(origX)).^2,2),1)/(size(origX,1)*size(origX,2)))
+    sqrt(mean(mean((double(Y) - double(origX)).^2,2),1))
     
    
 end
