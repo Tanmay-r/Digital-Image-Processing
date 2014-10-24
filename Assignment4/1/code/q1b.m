@@ -24,7 +24,7 @@ function q1b()
         for j=1:col_lim,
            window = X(i:i+p-1,j:j+p-1);
            temp=window(:);
-           temp_X=X(max(i-15,1):min(i+15,size(X,1)),max(j-15,1):min(j+15,size(X,2)));
+           temp_X=X(max(i-15,1):min(i+21,size(X,1)),max(j-15,1):min(j+21,size(X,2)));
            new_P(:,count)= patchBased(temp_X,temp);
            count=count+1;
         end
@@ -57,7 +57,7 @@ function q1b()
     
     
     'RMSE'
-    sqrt(mean(mean((double(Y) - double(origX)).^2,2),1)/(size(origX,1)*size(origX,2)))
+    sqrt(mean(mean((double(Y) - double(origX)).^2,2),1))
     
    
 end
