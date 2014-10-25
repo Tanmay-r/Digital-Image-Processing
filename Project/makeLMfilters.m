@@ -37,6 +37,7 @@ function F=makeLMfilters
     F(:,:,count+2)=normalise(fspecial('log',SUP,3*SCALES(i)));
     count=count+3;
   end;
+  F = preprocessFilter(F);
 return
 
 function f=makefilter(scale,phasex,phasey,pts,sup)
