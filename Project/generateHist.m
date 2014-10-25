@@ -5,7 +5,7 @@ function [ hist ] = generateHist(Database,image,textonDatabase)
     
     %apply K-means here
 
-    hist=zeros(1,size(textonDatabase,1));
+    hist = zeros(1,size(textonDatabase,1));
     texton = extractTextonC(image,Database);
     textonVector = zeros(size(texton,1)*size(texton,2), size(texton,3));
     for i=1:size(texton,3)
@@ -25,9 +25,6 @@ function [ hist ] = generateHist(Database,image,textonDatabase)
         [~,minIndex]=min(sum(diff.^2,1));
         hist(1,minIndex)=hist(1,minIndex)+1;
         
-    end
-    
-    
-  
+    end  
 end
 
