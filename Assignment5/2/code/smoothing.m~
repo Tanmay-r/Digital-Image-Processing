@@ -1,0 +1,7 @@
+function [origX, vec] = smoothing(image)
+    [origX, ~] = imread(image);
+    vec = zeros(size(origX, 1)*size(origX, 2), 5);
+    
+    for i=1:size(vec,1)
+     
+end
