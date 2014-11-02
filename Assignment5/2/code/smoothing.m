@@ -1,6 +1,6 @@
-function [origX, newVec, filteredImage] = smoothing(image, spatialSig, intensitySig)
+function [origX, filteredImage] = smoothing(image, spatialSig, intensitySig)
     [origX, ~] = imread(image);
-    
+    %origX = double(origX)/255;
     covMatrix = zeros(5, 5);
     covMatrix(1, 1) = spatialSig*spatialSig;
     covMatrix(2, 2) = spatialSig*spatialSig;
