@@ -65,6 +65,6 @@ function [val] = kernel(x1,x2,Sigma)
     %assert(Sigma*sigmaInverse == eye(size(Sigma)), 'inverse not computed correctly');
     %Sigma*sigmaInverse -eye(size(Sigma))
     %size(x1)
-    val =exp(-sqrt((x1-x2)'*sigmaInverse*(x1-x2)/2))/(sqrt(2*pi)*det(Sigma));
+pl    val =exp(-sqrt((x1-x2)'*sigmaInverse*(x1-x2)/2))/(sqrt(2*pi)*det(Sigma));
 end
 

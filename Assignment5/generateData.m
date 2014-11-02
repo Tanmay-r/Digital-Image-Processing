@@ -16,7 +16,7 @@ function [ Data ] = generateData(n,sigma1,sigma2)
 %     size(Z)
 %     surf(X,Y,Z); % generate surface plot
 %     shading interp;
-
+    
 end
 
 function [point] = getSample(sigma1,sigma2)
