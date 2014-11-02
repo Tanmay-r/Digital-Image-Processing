@@ -5,6 +5,7 @@ function [Clustered] = meanShiftClustering(Data,Sigma)
     Clustered = zeros(size(Data));
     for i=1:m
         Clustered(:,i) = convergeForPoint(Data(:,i), Data,Sigma);
+        i
     end
 end
 
@@ -13,7 +14,7 @@ function [shiftedPoint] = convergeForPoint(x,Data,Sigma)
     firstIteration=true;
     threshold  = 0.01;
     x_prev = x;
-    curr_px=1;    
+    curr_px=functionValue(x,Data,Sigma);    
     prev_px=0;
     while(firstIteration || ((norm(curr_px - prev_px)/norm(curr_px) > threshold) && norm(x_prev - x)/norm(x) > threshold))
         firstIteration = false;
@@ -24,14 +25,15 @@ function [shiftedPoint] = convergeForPoint(x,Data,Sigma)
         x = updateX(x,Data,Sigma);
         curr_px = functionValue(x,Data,Sigma);
         if(prev_px > curr_px)
-            'bigger'
-            curr_px
+            %'bigger'
+            %curr_px
             x = x_prev;
             x_prev  =temp1;
             curr_px = prev_px;   
             prev_px = temp2;
+            break;
         end    
-        curr_px
+        curr_px;
     end
     shiftedPoint  = x;
 end
