@@ -1,22 +1,31 @@
-function [Clustered] = meanShiftClustering(Data,Sigma)
+function [Iterations,Clustered] = meanShiftClustering(Data,Sigma)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
     m = size(Data,2);
     invSigma = inv(Sigma);
+    Iterations = zeros(size(Data,2),1);
     Clustered = zeros(size(Data));
     for i=1:m
-        Clustered(:,i) = convergeForPoint(Data(:,i), Data,Sigma,invSigma);
-        
+        [Iterations(i), Clustered(:,i)] = convergeForPoint(Data(:,i), Data,Sigma,invSigma);
     end
+    
+    'minimum'
+    min(Iterations)
+    'maxmimum'
+    max(Iterations)
+    'average'
+    mean(Iterations)
 end
 
-function [shiftedPoint] = convergeForPoint(x,Data,Sigma,invSigma)
+function [iteration, shiftedPoint] = convergeForPoint(x,Data,Sigma,invSigma)
    
     firstIteration=true;
     threshold  = 0.001;
     x_prev = x;
+    iteration = 0;
     while(firstIteration || norm(x_prev - x)/norm(x) > threshold)
         firstIteration = false;
+        iteration = iteration+1;
         x_prev = x;
         %x1 = updateX(x,Data,Sigma);
         x = updateX2(x,Data,Sigma,invSigma);
