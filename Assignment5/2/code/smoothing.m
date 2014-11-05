@@ -22,9 +22,10 @@ function [origX, filteredImage] = smoothing(image, spatialSig, intensitySig, win
     for i = offset+1:size(origX, 1)-offset
         for j = offset+1:size(origX, 2)-offset
             temp = vec(i, j, :);
-            newVec(i, j, :) = meanShiftClusteringWindowed(temp(:)', vec, offset, invCovMatrix);
-            size(temp)
+            [woah,newVec(i, j, :)] = meanShiftClusteringWindowed(temp(:), vec, offset, invCovMatrix);
+            %size(temp)
         end
+       
     end
     
     filteredImage = zeros(size(origX, 1),size(origX, 2), 3);

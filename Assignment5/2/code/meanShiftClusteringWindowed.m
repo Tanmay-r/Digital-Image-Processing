@@ -1,7 +1,8 @@
 function [Iterations,Clustered] = meanShiftClusteringWindowed(x,Data,h,invSigma)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
-     [Iterations, Clustered] = convergeForPoint(x,h,Data,invSigma);
+   
+    [Iterations, Clustered] = convergeForPoint(x,h,Data,invSigma);
    
   
 end
@@ -32,9 +33,11 @@ function [x_new] = updateX2(x,Data,sigmaInverse)
     %sigmaInverse = inv(Sigma);
     %K = exp(-sqrt((Y'*sigmaInverse*Y)/2))/(sqrt(2*pi)*det(Sigma));
     %t = diag(K)';
+    A = diag(sigmaInverse);
+    A = A(:, ones(1, size(Data,2)));
     
-    K = Y'*sigmaInverse*Y;
-    t =  (exp(-sqrt((diag(K)'/2)))/(sqrt(2*pi)))*det(sigmaInverse);
+    K = sum(Y'.*(A.*Y)',2);
+    t =  (exp(-(K'/2))/(sqrt(2*pi)))*det(sigmaInverse);
     
     T = t(ones(size(Data,1),1),:);
     %x_new = exp(-sqrt(sum(T.*Data,2)));
