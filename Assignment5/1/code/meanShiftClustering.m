@@ -1,12 +1,24 @@
-function [Iterations,Clustered] = meanShiftClusteringWindowed(x,Data,h,invSigma)
+function [Iterations,Clustered] = meanShiftClustering(Data,Sigma)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
-     [Iterations, Clustered] = convergeForPoint(x,Data,invSigma,h);
-   
-  
+    m = size(Data,2);
+    invSigma = inv(Sigma);
+    Iterations = zeros(size(Data,2),1);
+    Clustered = zeros(size(Data));
+    A = diag(invSigma);
+    A = A(:, ones(1, size(Data, 2)));
+    for i=1:m
+        [Iterations(i), Clustered(:,i)] = convergeForPoint(Data(:,i), Data,Sigma,A);
+    end
+    'minimum'
+    min(Iterations)
+    'maxmimum'
+    max(Iterations)
+    'average'
+    mean(Iterations)
 end
 
-function [iteration, shiftedPoint] = convergeForPoint(x,h,Data,invSigma)
+function [iteration, shiftedPoint] = convergeForPoint(x,Data,Sigma,A)
    
     firstIteration=true;
     threshold  = 0.001;
@@ -17,20 +29,22 @@ function [iteration, shiftedPoint] = convergeForPoint(x,h,Data,invSigma)
         iteration = iteration+1;
         x_prev = x;
         %x1 = updateX(x,Data,Sigma);
-        x = updateX2(x,Data(x(1)-h: x(1)+h,x(2)-h:x(2)+h),invSigma);
+        x = updateX2(x,Data,Sigma,A);
     end
     shiftedPoint  = x;
 end
 
-function [x_new] = updateX2(x,Data,sigmaInverse)
+
+function [x_new] = updateX2(x,Data,Sigma, A)
     X=x(:,ones(1,size(Data,2)));
     Y = X-Data;
     %sigmaInverse = inv(Sigma);
     %K = exp(-sqrt((Y'*sigmaInverse*Y)/2))/(sqrt(2*pi)*det(Sigma));
     %t = diag(K)';
     
-    K = Y'*sigmaInverse*Y;
-    t =  (exp(-sqrt((diag(K)'/2)))/(sqrt(2*pi)))*det(sigmaInverse);
+    K = sum(Y'.*(A.*Y)',2);
+    
+    t =  exp(-sqrt((K'/2)))/(sqrt(2*pi)*det(Sigma));
     
     T = t(ones(size(Data,1),1),:);
     %x_new = exp(-sqrt(sum(T.*Data,2)));

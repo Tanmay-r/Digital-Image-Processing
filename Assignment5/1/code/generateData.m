@@ -20,8 +20,8 @@ function [ Data ] = generateData(n,sigma1,sigma2)
 end
 
 function [point] = getSample(sigma1,sigma2)
-    x1 = mvnrnd([0 0],[sigma1 sigma1]); % sample from 1st Gaussian
-    x2 = mvnrnd([5 5],[sigma2 sigma2]); % sample from 2nd Gaussian
+    x1 = mvnrnd([0 0],sigma1); % sample from 1st Gaussian
+    x2 = mvnrnd([5 5],sigma2); % sample from 2nd Gaussian
     a = rand(1); % samples from a uniform random distribution
     if (a <= 0.4) 
         x = x1;
