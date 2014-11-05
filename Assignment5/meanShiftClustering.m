@@ -1,39 +1,34 @@
-function [Clustered] = meanShiftClustering(Data,Sigma)
+function [Iterations,Clustered] = meanShiftClustering(Data,Sigma)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
     m = size(Data,2);
+    invSigma = inv(Sigma);
+    Iterations = zeros(size(Data,2),1);
     Clustered = zeros(size(Data));
     for i=1:m
-        Clustered(:,i) = convergeForPoint(Data(:,i), Data,Sigma);
-        i
+        [Iterations(i), Clustered(:,i)] = convergeForPoint(Data(:,i), Data,Sigma,invSigma);
     end
+    
+    'minimum'
+    min(Iterations)
+    'maxmimum'
+    max(Iterations)
+    'average'
+    mean(Iterations)
 end
 
-function [shiftedPoint] = convergeForPoint(x,Data,Sigma)
+function [iteration, shiftedPoint] = convergeForPoint(x,Data,Sigma,invSigma)
    
     firstIteration=true;
-    threshold  = 0.01;
+    threshold  = 0.001;
     x_prev = x;
-    curr_px=functionValue(x,Data,Sigma);    
-    prev_px=0;
-    while(firstIteration || ((norm(curr_px - prev_px)/norm(curr_px) > threshold) && norm(x_prev - x)/norm(x) > threshold))
+    iteration = 0;
+    while(firstIteration || norm(x_prev - x)/norm(x) > threshold)
         firstIteration = false;
-        temp1 = x_prev;
-        temp2 = prev_px;
-        prev_px = curr_px;
+        iteration = iteration+1;
         x_prev = x;
-        x = updateX(x,Data,Sigma);
-        curr_px = functionValue(x,Data,Sigma);
-        if(prev_px > curr_px)
-            %'bigger'
-            %curr_px
-            x = x_prev;
-            x_prev  =temp1;
-            curr_px = prev_px;   
-            prev_px = temp2;
-            break;
-        end    
-        curr_px;
+        %x1 = updateX(x,Data,Sigma);
+        x = updateX2(x,Data,Sigma,invSigma);
     end
     shiftedPoint  = x;
 end
@@ -57,6 +52,24 @@ function [x_new] = updateX(x,Data,Sigma)
     X = Y(1:end-1,:);
     Z = Y(end,:);
     x_new = sum(X,2)/sum(Z);
+    
+end
+
+function [x_new] = updateX2(x,Data,Sigma, sigmaInverse)
+    X=x(:,ones(1,size(Data,2)));
+    Y = X-Data;
+    %sigmaInverse = inv(Sigma);
+    %K = exp(-sqrt((Y'*sigmaInverse*Y)/2))/(sqrt(2*pi)*det(Sigma));
+    %t = diag(K)';
+    
+    K = Y'*sigmaInverse*Y;
+    t =  exp(-sqrt((diag(K)'/2)))/(sqrt(2*pi)*det(Sigma));
+    
+    T = t(ones(size(Data,1),1),:);
+    %x_new = exp(-sqrt(sum(T.*Data,2)));
+    x_new = sum(T.*Data,2);
+    z_new = sum(t);
+    x_new = x_new/z_new;
 end
 
 
@@ -65,6 +78,6 @@ function [val] = kernel(x1,x2,Sigma)
     %assert(Sigma*sigmaInverse == eye(size(Sigma)), 'inverse not computed correctly');
     %Sigma*sigmaInverse -eye(size(Sigma))
     %size(x1)
-pl    val =exp(-sqrt((x1-x2)'*sigmaInverse*(x1-x2)/2))/(sqrt(2*pi)*det(Sigma));
+    val =exp(-sqrt((x1-x2)'*sigmaInverse*(x1-x2)/2))/(sqrt(2*pi)*det(Sigma));
 end
 
