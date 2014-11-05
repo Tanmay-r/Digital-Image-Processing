@@ -1,7 +1,7 @@
 function [Iterations,Clustered] = meanShiftClusteringWindowed(x,Data,h,invSigma)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
-     [Iterations, Clustered] = convergeForPoint(x,Data,invSigma,h);
+     [Iterations, Clustered] = convergeForPoint(x,h,Data,invSigma);
    
   
 end
@@ -9,7 +9,7 @@ end
 function [iteration, shiftedPoint] = convergeForPoint(x,h,Data,invSigma)
    
     firstIteration=true;
-    threshold  = 0.001;
+    threshold  = 0.01;
     x_prev = x;
     iteration = 0;
     
@@ -18,15 +18,10 @@ function [iteration, shiftedPoint] = convergeForPoint(x,h,Data,invSigma)
         iteration = iteration+1;
         x_prev = x;
         %x1 = updateX(x,Data,Sigma);
-        new_Data = zeros(2*h+1,2*h+1,size(Data,3));
-        new_Data = Data(x(1)-h: x(1)+h,x(2)-h:x(2)+h,:);
-        new_Data1 = zeros(size(new_Data,1)* size(new_Data,2),size(Data,3));
-        for i = 1:size(new_Data, 1)
-            for j = 1:size(new_Data, 2)
-                new_Data1((i-1)*size(new_Data, 2) + j,:) = new_Data(i,j,:);s
-            end
-        end
-        x = updateX2(x,new_Data1,invSigma);
+       
+        new_Data = Data(round(x(1))-h: round(x(1))+h,round(x(2))-h:round(x(2))+h,:);
+        new_Data = reshape(new_Data,size(new_Data,1)*size(new_Data,2),size(Data,3));
+        x = updateX2(x,new_Data',invSigma);
     end
     shiftedPoint  = x;
 end
