@@ -17,15 +17,12 @@ function [textonDatabase] = generateTextonDatabase(k,Database,imageSet)
 %     mapArr=['01';'02';'03','04','05','06','07','08','09','10','11','12','13']
 %     mapArr(1,1)
     
+    textonDatabase=zeros(k*size(imageSet,3),size(Database,2));
     for i=1:size(imageSet,3)
         
         kTextons=generateTextons(Database,imageSet(:,:,i),k);
+        textonDatabase((i-1)*k+1:i*k,:)=kTextons;
         
-        if(i==1)
-            textonDatabase=kTextons;
-        else
-            textonDatabase=[textonDatabase; kTextons];
-        end
         
         
     end
