@@ -29,10 +29,18 @@ function [image, segmentedImage] = segment(image, K)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     [idx, centers] = kmeans(vec, K, 'start', initialKmeans');
     
+    Averages = zeros(size(centers));
+    for i =1:size(Averages,1)
+        A = (idx ==i);
+        A = A(:, ones(1, size(vec,2)));
+        Averages(i,:) = sum(A.*vec,1);
+        count = sum((idx ==i),1);
+        Averages(i,:) = Averages(i,:)/count;
+    end
     segmentedImage = zeros(size(image, 1),size(image, 2), 3);
     for i = 1:size(segmentedImage, 1)
         for j = 1:size(segmentedImage, 2)
-            segmentedImage(i, j, :) = centers(idx((i-1)*size(image, 2) + j), 3:5);
+            segmentedImage(i, j, :) = Averages(idx((i-1)*size(image, 2) + j), 3:5);
         end
     end
 end
