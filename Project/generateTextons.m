@@ -12,11 +12,6 @@ function [ KTextons ] = generateTextons(Database,image,K)
         textonVector(:,i)  = temp(:);
     end
     
-    filterSize = size(Database(:,:,1));
-    
-    fh = filterSize(1);
-    fw = filterSize(2);
-    
     Lx=sqrt(sum(textonVector.^2,2)); %row norm
     Lx=log(1+(Lx/0.03))./Lx; 
     textonVector=textonVector.*Lx(:,ones(1,size(textonVector,2)));

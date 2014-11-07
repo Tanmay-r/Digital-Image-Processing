@@ -1,11 +1,11 @@
-function [histDatabase] = generateHistDatabase(textonDatabase)
+function [histDatabase] = generateHistDatabase(textonDatabase,Database,imageSet)
 
     addpath('./common/export_fig/')
     addpath('./common/')
 
     rng(0);
-    Database = makeLMfilters;
-    Database = preprocessFilter(Database);
+%     Database = makeLMfilters;
+%     Database = preprocessFilter(Database);
 %     
 %     F = zeros(size(Database,3),size(Database,1)*size(Database,2));
 %     for i=1:size(Database,3)
@@ -13,15 +13,13 @@ function [histDatabase] = generateHistDatabase(textonDatabase)
 %         F(i,:) = A(:);
 %     end
     
-    basefile='./textures/1.1.';
+    
 %     mapArr=['01';'02';'03','04','05','06','07','08','09','10','11','12','13']
 %     mapArr(1,1)
-    histDatabase = zeros(13, size(textonDatabase, 1));
-    for i=1:13
-        filename=strcat(basefile,int2str(i),'.tiff');
-        image = mat2gray(imread(filename));
-        image = preprocessImage(image);
-        hist=generateHist(Database,image,textonDatabase);
+    histDatabase = zeros(size(imageSet,3), size(textonDatabase, 1));
+    for i=1:size(imageSet,3)
+        i
+        hist=generateHist(Database,imageSet(:,:,i),textonDatabase);
         histDatabase(i, :) = hist;       
     end
     

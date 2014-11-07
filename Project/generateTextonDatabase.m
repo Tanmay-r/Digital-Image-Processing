@@ -1,11 +1,11 @@
-function [textonDatabase] = generateTextonDatabase(k)
+function [textonDatabase] = generateTextonDatabase(k,Database,imageSet)
 
     addpath('./common/export_fig/')
     addpath('./common/')
 
     rng(0);
-    Database = makeLMfilters;
-    Database=preprocessFilter(Database);
+%     Database = makeLMfilters;
+%     Database=preprocessFilter(Database);
 %     
 %     F = zeros(size(Database,3),size(Database,1)*size(Database,2));
 %     for i=1:size(Database,3)
@@ -13,15 +13,13 @@ function [textonDatabase] = generateTextonDatabase(k)
 %         F(i,:) = A(:);
 %     end
     
-    basefile='./textures/1.1.';
+    
 %     mapArr=['01';'02';'03','04','05','06','07','08','09','10','11','12','13']
 %     mapArr(1,1)
     
-    for i=1:13
-        filename=strcat(basefile,int2str(i),'.tiff');
-        image = mat2gray(imread(filename));
-        image=preprocessImage(image);
-        kTextons=generateTextons(Database,image,k);
+    for i=1:size(imageSet,3)
+        
+        kTextons=generateTextons(Database,imageSet(:,:,i),k);
         
         if(i==1)
             textonDatabase=kTextons;
