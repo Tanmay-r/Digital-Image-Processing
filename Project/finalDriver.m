@@ -42,13 +42,15 @@ function [minIndex]=finalDriver(param,testParam,loadParamT,loadParamH,dataParam)
     
     if(testParam==1)
         basefile='./NormalizedBrodatz/D';
-        testImageSet=zeros(128,128,112);
-        for i=1:112
+        testImageSet=zeros(128,128,112*5);
+        for i=1:112            
             filename=strcat(basefile,int2str(i),'.tif');
             image = mat2gray(imread(filename));
-            image = image(513:640,513:640);
-            image=preprocessImage(image);
-            testImageSet(:,:,i)=image;
+            for k = 1:5
+                test_image = image((k-1)*128+1:k*128,513:640);
+                test_image=preprocessImage(test_image);
+                testImageSet(:,:,(i-1)*5+k)=test_image;
+            end
         end
     else
         basefile='./textures/1.3.';

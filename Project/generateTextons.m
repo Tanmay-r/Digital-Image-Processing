@@ -36,6 +36,14 @@ function [ KTextons ] = generateTextons(Database,image,K)
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     [~, KTextons] = kmeans(textonVector,K,'start', initialKmeans');
-  
+    
+   
+   
+    % temp=texton(256,256,:);
+    % temp=vec2mat(pinv(F)*temp(:),49);
+    % imshow(mat2gray(temp));
+    % figure()
+    % imshow(mat2gray(image(232:280,232:280)));
+    % pause;
 end
 

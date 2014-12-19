@@ -26,7 +26,6 @@ function [texton] = extractTextonC(image, Database)
    end
    
    texton = texton(fh+1:height-fh,fw+1:width-fw,:);
-
     % temp=texton(256,256,:);
     % temp=vec2mat(pinv(F)*temp(:),49);
     % imshow(mat2gray(temp));

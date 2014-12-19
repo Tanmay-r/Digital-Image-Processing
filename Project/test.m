@@ -4,7 +4,7 @@ function [minindex] = test(Database, histDatabase, textonDatabase, testImageSet)
     for i=1:size(testImageSet,3)
         i
         image_hist=generateHist(Database, testImageSet(:,:,i), textonDatabase);
-        chiSquareArr = zeros(1, 13);
+        chiSquareArr = zeros(1, size(histDatabase,1));
         for j = 1:size(histDatabase,1)
             chiSquareArr(j) = chiSquare(image_hist, histDatabase(j, :));
         end
@@ -13,3 +13,4 @@ function [minindex] = test(Database, histDatabase, textonDatabase, testImageSet)
     end  
 end
 
+    
